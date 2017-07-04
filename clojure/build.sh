@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo -e "Building Whiteboard...\n"
+echo -e "Building Clojure Implementations...\n"
 
 ##################
-# CLOJURE
+# ONYX
 
-cd clojure
+cd onyx
 ./build.sh
 cd ..
 

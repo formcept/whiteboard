@@ -2,6 +2,7 @@
 .classpath
 .project
 .settings
+*.log
 
 # Idea
 .idea
@@ -9,6 +10,7 @@
 
 # Maven
 target
+pom.xml
 
 # Scala
 .cache
