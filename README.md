@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/formcept/whiteboard.svg?branch=master)](https://travis-ci.org/formcept/whiteboard#)
+[![Build Status](https://circleci.com/gh/formcept/whiteboard.svg?style=svg)](https://circleci.com/gh/formcept/whiteboard)
 
 # Whiteboard
 FORMCEPT Whiteboard used by developers for developers
