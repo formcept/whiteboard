@@ -190,10 +190,11 @@
 (def input-segments
   [{:index 0 :data "punit naik"} {:index 1 :data "punit"}])
 
-(doseq [segment input-segments]
-  (>!! input-chan segment))
-
-(close! input-chan)
+(defn publish-to-chan []
+  (do
+    (doseq [segment input-segments]
+      (>!! input-chan segment))
+    (close! input-chan)))
 
 (def id (java.util.UUID/randomUUID))
 
@@ -247,6 +248,7 @@
 (defn run
   [params]
   (do
+    (publish-to-chan)
     (as-> (onyx.api/submit-job peer-config
                                {:workflow workflow
                                 :catalog (catalog params)
