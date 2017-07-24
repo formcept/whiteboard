@@ -214,14 +214,6 @@
    :onyx.messaging/peer-port 40200
    :onyx.messaging/bind-addr "localhost"})
 
-(def env (onyx.api/start-env env-config))
-
-(def peer-group (onyx.api/start-peer-group peer-config))
-
-(def n-peers (count (set (mapcat identity workflow))))
-
-(def v-peers (onyx.api/start-peers n-peers peer-group))
-
 (defn inject-in-ch [event lifecycle]
   {:core.async/buffer input-buffer
    :core.async/chan input-chan})
@@ -247,22 +239,26 @@
 
 (defn run
   [params]
-  (do
-    (publish-to-chan)
-    (as-> (onyx.api/submit-job peer-config
-                               {:workflow workflow
-                                :catalog (catalog params)
-                                :lifecycles lifecycles
-                                :windows (windows params)
-                                :triggers (triggers params)
-                                :flow-conditions (flow-conditions params)
-                                :task-scheduler :onyx.task-scheduler/balanced}) $
-          (onyx.api/await-job-completion peer-config (:job-id $)))
-    (doseq [v-peer v-peers]
-      (onyx.api/shutdown-peer v-peer))
-    (onyx.api/shutdown-peer-group peer-group)
-    (onyx.api/shutdown-env env)
-    (onyx.plugin.core-async/take-segments! output-chan 50)))
+  (let [env (onyx.api/start-env env-config)
+        peer-group (onyx.api/start-peer-group peer-config)
+        n-peers (count (set (mapcat identity workflow)))
+        v-peers (onyx.api/start-peers n-peers peer-group)]
+    (do
+      (publish-to-chan)
+      (as-> (onyx.api/submit-job peer-config
+                                 {:workflow workflow
+                                  :catalog (catalog params)
+                                  :lifecycles lifecycles
+                                  :windows (windows params)
+                                  :triggers (triggers params)
+                                  :flow-conditions (flow-conditions params)
+                                  :task-scheduler :onyx.task-scheduler/balanced}) $
+            (onyx.api/await-job-completion peer-config (:job-id $)))
+      (doseq [v-peer v-peers]
+        (onyx.api/shutdown-peer v-peer))
+      (onyx.api/shutdown-peer-group peer-group)
+      (onyx.api/shutdown-env env)
+      (onyx.plugin.core-async/take-segments! output-chan 50))))
 
 (defn -main
   [& args]
