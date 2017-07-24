@@ -1,1 +1,4 @@
+dist: trusty
+sudo: required
+install: ./install-deps.sh
 script: ./build.sh
