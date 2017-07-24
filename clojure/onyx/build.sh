@@ -13,7 +13,7 @@ echo -e "\n---------------------------------------------------------------------
 echo "Building Onyx Utils"
 echo -e "---------------------------------------------------------------------"
 cd onyx-utils
-~/bin/lein do install, uberjar
+lein do install, uberjar
 cd ..
 
 ##################
@@ -22,7 +22,7 @@ echo -e "\n---------------------------------------------------------------------
 echo "Building Onyx LSH"
 echo -e "---------------------------------------------------------------------"
 cd locality-sensitive-hashing
-~/bin/lein with-profiles +ship do install, uberjar
+lein with-profiles +ship do install, uberjar
 cd ..
 
 ##################
