@@ -84,7 +84,6 @@
 
 (defn catalog
   [params]
-  ;; Taking in the input
   [{:onyx/name :in
     :onyx/plugin :onyx.plugin.core-async/input
     :onyx/type :input
@@ -93,37 +92,36 @@
     :onyx/max-peers 1
     :onyx/doc "Reads segments from a core.async channel"}
     
-   ;; Generate hashes
    {:onyx/name :gen-hash
     :onyx/fn ::add-hash-to-records
     :onyx/type :function
-    :onyx/batch-size batch-size}
+    :onyx/batch-size batch-size
+    :onyx/doc "Generate hashes for every record"}
    
-   ;; Combine by hashes
    {:onyx/name :combine-by-hash
     :onyx/fn :clojure.core/identity
     :onyx/type :function
-    :onyx/batch-size batch-size}
+    :onyx/batch-size batch-size
+    :onyx/doc "Combine by hashes"}
     
-   ;; Generate Candidates
    {:onyx/name :gen-candidates
     :onyx/fn ::cartesian-products
     :onyx/type :function
-    :onyx/batch-size batch-size}
+    :onyx/batch-size batch-size
+    :onyx/doc "Generate candidate pairs"}
    
-   ;; Applying overall distinct i.e. on the entire dataset
    {:onyx/name :distinct-candidates
     :onyx/fn :clojure.core/identity
     :onyx/type :function
-    :onyx/batch-size batch-size}
+    :onyx/batch-size batch-size
+    :onyx/doc "Applying overall distinct i.e. on the entire dataset"}
    
-   ;; Calculate Similarity between candidates
    {:onyx/name :calculate-similarity
     :onyx/fn ::compare-segment-pairs
     :onyx/type :function
-    :onyx/batch-size batch-size}
+    :onyx/batch-size batch-size
+    :onyx/doc "Calculate Similarity between candidates"}
    
-   ;; Output the data
    {:onyx/name :out
     :onyx/plugin :onyx.plugin.core-async/output
     :onyx/type :output
