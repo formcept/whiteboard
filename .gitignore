@@ -2,6 +2,7 @@
 .classpath
 .project
 .settings
+*.log
 
 # Idea
 .idea
@@ -9,6 +10,7 @@
 
 # Maven
 target
+pom.xml
 
 # Scala
 .cache
@@ -21,3 +23,8 @@ lib_managed/
 *.jar
 *.war
 *.ear
+
+# Lein
+*.lein-repl-history
+onyx.log
+
