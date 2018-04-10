@@ -1,0 +1,17 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{% set count = 1 %}
+{% for item in groups['master'] %}
+{% if item not in groups['slaves'] %}
+{{ item }} {{ 'master' }}{{count}}
+{% set count = count + 1 %}
+{% endif %}
+{% endfor %}
+{% set count1 = 1 %}
+{% for item in groups['slaves'] %}
+{% if item not in groups['master'] %}
+{{ item }} {{ 'slave' }}{{count1}}
+{% set count1 = count1 + 1 %}
+{% endif %}
+{% endfor %}
