@@ -1,0 +1,11 @@
+---
+# This playbook will deploys Java-1.8 on centos 7
+
+- hosts: common
+  gather_facts: false
+  become: yes
+  vars_files:
+    - group_vars/common
+  roles:
+    - common
+    - bashrc

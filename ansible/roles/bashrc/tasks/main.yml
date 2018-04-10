@@ -1,0 +1,16 @@
+---
+# this file will command the ansible to source the bashrc
+
+- name: step 1 | Checking .envrc file exist or not
+  become_user: '{{user}}'
+  stat:
+   path: "{{home_directory}}/.envrc"
+  register: folder_stats
+
+- name: step 2 |  writing and source the bashrc
+  become_user: '{{user}}'
+  shell: "{{item}}"
+  with_items:
+   - echo source {{home_directory}}/.envrc >> ~/.bashrc
+   - source ~/.bashrc
+  when: folder_stats.stat.exists

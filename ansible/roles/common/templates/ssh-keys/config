@@ -1,0 +1,22 @@
+{% for host in groups['master'] %}
+{% if host not in groups['slaves'] %}
+HOST {{ host }}
+        StrictHostKeyChecking no
+        IdentityFile {{ssh_directory}}/{{private_key_name}}
+{% endif %}
+{% endfor %}
+{% for host in groups['slaves'] %}
+{% if host not in groups['master'] %}
+HOST {{ host }}
+        StrictHostKeyChecking no
+        IdentityFile {{ssh_directory}}/{{private_key_name}}
+{% endif %}
+{% endfor %}
+Host master*
+        StrictHostKeyChecking no
+        IdentityFile {{ssh_directory}}/{{private_key_name}}
+
+Host slave*
+        StrictHostKeyChecking no
+        IdentityFile {{ssh_directory}}/{{private_key_name}}
+
