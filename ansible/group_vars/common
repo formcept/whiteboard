@@ -1,0 +1,33 @@
+# This file consist of variable where user need to define all values in the variable ex: you want your hostname to be zyz then you should place xyz in user: xyz.
+
+# Install list of below mentioned packages
+install_list: ['epel-release','make','openssl-devel.x86_64','gcc-c++','git','python','gnuplot','make','gcc','tree', 'vim', 'wget', 'nano','ntp', 'curl', 'net-tools','openssl','firewalld','unzip','bzip2','libselinux-python','libsemanage-python']
+
+# user-name
+user: centos
+
+# user-directory
+home_directory: '/home/{{user}}'
+
+# setting up /etc/security/limits.conf
+max_opening_filelimits: '{{user}} - nofile 65536'
+memory_lock: '{{user}} - memlock unlimited'
+max_number_of_process: '{{user}} - nproc unlimited'
+max_limits: '{{user}} - c unlimited'
+
+# you shold copy your public and private keys in roles/common/templates/ssh-keys and replace the below name of the keys with your public and private keys name.
+# .ssh directory path
+ssh_directory: '{{home_directory}}/.ssh'
+private_key_name: id_rsa
+public_key_name: id_rsa.pub
+
+# if you want to upgrade the version of java from 1.8 to 1.9 then you should first download the java tar file and replace the tar file with default one and location is /roles/common/files and also replace the name java_binary given below with your java tar file name.
+# java_binary
+java_binary: jdk-8u101-linux-x64.tar.gz
+
+# you need to extract the java that you have downloaded and replace the name with your extracted java file.
+# Set java Version. after the extraction of java its the folder name.
+java_version: jdk1.8.0_101
+
+# java_location
+java_home: '{{home_directory}}/{{java_version}}'

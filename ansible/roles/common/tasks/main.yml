@@ -1,0 +1,304 @@
+---
+# This file instruct ansible to update the system, disable the firewall, install the all necessity software that are needed.
+
+- name: step 1 | check if system is already updated.
+  yum:
+    name="*" state=latest
+  check_mode: true
+  register: update
+
+- name: step 2 | update all package
+  become: yes
+  yum: name=* state=latest
+  when: update.changed
+
+- name: step 3 | check if package is already installed
+  become: yes
+  yum:
+    pkg="{{install_list}}"
+  check_mode: true
+  register: pkg_installed
+
+- name: Step 4 | install required packages
+  become: yes
+  yum: pkg={{item}} state=installed
+  with_items:
+   - '{{install_list}}'
+  when: pkg_installed.changed
+
+- name: step 5 | check cmake3 is installed or not
+  shell: cmake3 --version
+  register: check_cmake
+  ignore_errors: True
+  changed_when: False
+
+- name : step 6 | installing cmake-3.6
+  become: yes
+  shell: yum install cmake3 -y
+  when: check_cmake.rc > 0
+
+- name: step 7 | Check that '{{ user }}' user exists or not.
+  shell: grep "^{{ user }}:" /etc/passwd
+  ignore_errors: yes
+  register: user_exist
+
+- name: Step 8 | creating {{user}} user with admin access
+  user: name='{{user}}' groups=wheel append=yes shell=/bin/bash createhome=yes state=present
+  when: user_exist.rc > 0
+
+- name: Step 9 | setting password for {{user}} user
+  become: yes
+  shell: echo '{{user}}':'{{user}}' | sudo chpasswd
+  when: user_exist.rc > 0
+
+- name: Step 10 | allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+  when: user_exist.rc > 0
+
+- name: Step 11 | add users to wheel group
+  user: name='{{user}}' groups=wheel append=yes
+  when: user_exist.rc > 0
+
+- name: Step 12 | setting entry in visudo.
+  become: yes
+  shell: echo '{{user}} ALL=(ALL:ALL)' 'NOPASSWD':' ALL' | sudo EDITOR='tee -a' visudo
+  when: user_exist.rc > 0
+
+- name: step 13 | setting up /etc/security/imits.conf
+  lineinfile:
+   path: /etc/security/limits.conf
+   insertbefore: '# End of file'
+   line: "{{ item }}"
+  with_items:
+    - "{{max_opening_filelimits}}"
+    - "{{memory_lock}}"
+    - "{{max_number_of_process}}"
+    - "{{max_limits}}"
+
+- name: step 14 | setting up /etc/sysctl.conf
+  lineinfile:
+   path: /etc/sysctl.conf
+   insertbefore: '# End of file'
+   line: "{{ item }}"
+  with_items:
+    - "vm.overcommit_memory=1"
+    - "vm.max_map_count=262144"
+
+- name: step 15 | setting up /etc/sysctl.conf
+  become: yes
+  command: "{{ item }}"
+  with_items:
+    - sysctl -p --system
+
+- name: Step 16 | updating /etc/hosts file
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+   - { src: "hosts", dest: "/etc/hosts" }
+
+- name: step 17 | Comment out /etc/fstab in fstab
+  replace:
+    dest: /etc/fstab
+    regexp: '^/dev/mapper/VolGroup00-LogVol01 swap                    swap    defaults        0 0'
+    replace: '#/dev/mapper/VolGroup00-LogVol01 swap                    swap    defaults        0 0'
+  tags: update-fstab
+
+- name: Step 18 | disable firewall
+  become: yes
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: Step 19 | flushing iptables
+  become: yes
+  command: "{{ item }}"
+  with_items:
+   - iptables --flush
+
+- name: Step 20 | Disable SELinux at next reboot
+  become: yes
+  selinux:
+    state: disabled
+
+- name: step 21 | Set SELinux in permissive mode until the machine is rebooted
+  become: yes
+  command: setenforce 0
+  ignore_errors: true
+  changed_when: false
+
+- name: step 22 | check if ntp is installed
+  yum:
+    name=ntp state=installed
+  check_mode: true
+  register: ntp_install
+
+- name: step 23 | install NTP
+  become: yes
+  yum: name=ntp state=installed
+  when: ntp_install.changed
+
+- name: step 24 | ensure ntp is running
+  service:
+    name: ntpd
+    state: started
+
+- name: step 25 |  Checking .ssh directory exist or not
+  become_user: '{{user}}'
+  stat:
+   path: "{{ssh_directory}}"
+  register: ssh_folder_stats
+
+- name: step 26 | create ssh directory
+  become_user: '{{user}}'
+  file:
+    path: '{{ssh_directory}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0700
+  when: not ssh_folder_stats.stat.exists
+
+- name: step 27 | checking private file exists or not.
+  become: yes
+  stat:
+    path: '{{ssh_directory}}/{{private_key_name}}'
+  register: private_key
+
+- name: step 28 | checking public key file exists or not.
+  become: yes
+  stat:
+    path: '{{ssh_directory}}/{{public_key_name}}'
+  register: public_key
+
+- name: step 29 | checking authorized_keys file exists or not.
+  become: yes
+  stat:
+    path: '{{ssh_directory}}/authorized_keys'
+  register: authorized_keys
+
+- name: step 30 | copying ssh keys
+  become_user: '{{user}}'
+  copy:
+    src: templates/ssh-keys/{{ item }}
+    dest: '{{ssh_directory}}/{{ item }}'
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0600
+  with_items:
+    - "{{private_key_name}}"
+    - "{{public_key_name}}"
+  when: not private_key.stat.exists and not public_key.stat.exists
+
+- name: step 31 | create authorized_keys file
+  become_user: '{{user}}'
+  file: path='{{ssh_directory}}' state=touch owner={{user}} group={{user}} mode=0600
+  when: not authorized_keys.stat.exists
+
+- name: step 32 | copy config files
+  become: yes
+  template: src={{ item.src }} dest={{ item.dest }}
+  mode: 0600
+  with_items:
+   - { src: "./ssh-keys/config", dest: '{{ssh_directory}}' }
+
+- name: step 33 | copying public key in authorized_keys.
+  become_user: '{{user}}'
+  remote_src: yes
+  shell: "{{ item }} chdir={{ssh_directory}}"
+  with_items:
+    - 'cat {{public_key_name}} >> authorized_keys'
+  when: not private_key.stat.exists and not public_key.stat.exists
+
+- name: step 34 | changing directory permission
+  become: yes
+  shell: 'chmod 700 {{ssh_directory}} && chmod 600 {{ssh_directory}}/*'
+
+- name: step 35 | Checking java binary
+  become_user: '{{user}}'
+  stat:
+   path: "{{home_directory}}/{{java_binary}}"
+  register: folder_stats
+
+- name: step 36 | copy java-1.8 binary
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{java_binary}}
+    dest: '{{home_directory}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 37 | check java directory
+  become_user: '{{user}}'
+  stat:
+   path: "{{java_home}}"
+  register: folder_stats
+
+- name: step 38 | extracting {{java_version}} binary
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{java_binary}}
+    dest: '{{home_directory}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 39 | Checking home directory
+  become_user: '{{user}}'
+  stat:
+   path: "{{home_directory}}"
+  register: folder_stats
+
+- name: step 40 | copy envrc file
+  template:
+    src: ./env-file/envrc
+    dest: '{{home_directory}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: folder_stats.stat.exists
+
+- name: step 41 | renaming envrc file
+  command: mv /home/{{user}}/envrc /home/{{user}}/.envrc
+
+- name: Step 42 | sync master time on all the machines
+  command: echo {{user}} | sudo -S date --set="$(ssh {{ groups['master'][0] }} date)"
+
+- name: step 43 | check java is installed or not
+  shell: java -version
+  register: check_java
+  ignore_errors: True
+  changed_when: False
+
+- name: Step 44 | update alternatives
+  command: "{{ item }}"
+  when: check_java.rc > 0
+  with_items:
+   - update-alternatives --install "/usr/bin/java" "java" "{{home_directory}}/jdk1.8.0_101/bin/java" 1
+   - update-alternatives --install "/usr/bin/javac" "javac" "{{home_directory}}/jdk1.8.0_101/bin/javac" 1
+   - update-alternatives --install "/usr/bin/javaws" "javaws" "{{home_directory}}/jdk1.8.0_101/bin/javaws" 1
+   - update-alternatives --install "/usr/bin/jps" "jps" "{{home_directory}}/jdk1.8.0_101/bin/jps" 1
+   - update-alternatives --set java "{{home_directory}}/jdk1.8.0_101/bin/java"
+   - update-alternatives --set javac "{{home_directory}}/jdk1.8.0_101/bin/javac"
+   - update-alternatives --set javaws "{{home_directory}}/jdk1.8.0_101/bin/javaws"
+   - update-alternatives --set jps "{{home_directory}}/jdk1.8.0_101/bin/jps"
+
+- name: step 45 | check node-js is installed or not
+  shell: node -v
+  register: check_node
+  ignore_errors: True
+  changed_when: False
+
+- name : step 46 | installing nodesource via curl
+  become_user: '{{user}}'
+  shell: curl --silent --location https://rpm.nodesource.com/setup_6.x | sudo bash -
+  when: check_node.rc > 0
+
+- name : step 47 | installing nodejs
+  become: yes
+  shell: yum install nodejs -y
+  when: check_node.rc > 0
