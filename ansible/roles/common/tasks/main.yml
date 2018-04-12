@@ -13,11 +13,11 @@
   when: update.changed
 
 - name: step 3 | check if package is already installed
-  become: yes
   yum:
     pkg="{{install_list}}"
   check_mode: true
   register: pkg_installed
+  ignore_errors: True
 
 - name: Step 4 | install required packages
   become: yes
@@ -164,25 +164,19 @@
   when: not ssh_folder_stats.stat.exists
 
 - name: step 27 | checking private file exists or not.
-  become: yes
+  become_user: '{{user}}'
   stat:
     path: '{{ssh_directory}}/{{private_key_name}}'
   register: private_key
 
 - name: step 28 | checking public key file exists or not.
-  become: yes
+  become_user: '{{user}}'
   stat:
     path: '{{ssh_directory}}/{{public_key_name}}'
   register: public_key
 
-- name: step 29 | checking authorized_keys file exists or not.
+- name: step 29 | copying ssh keys
   become: yes
-  stat:
-    path: '{{ssh_directory}}/authorized_keys'
-  register: authorized_keys
-
-- name: step 30 | copying ssh keys
-  become_user: '{{user}}'
   copy:
     src: templates/ssh-keys/{{ item }}
     dest: '{{ssh_directory}}/{{ item }}'
@@ -194,6 +188,12 @@
     - "{{public_key_name}}"
   when: not private_key.stat.exists and not public_key.stat.exists
 
+- name: step 30 | checking authorized_keys file exists or not.
+  become_user: '{{user}}'
+  stat:
+    path: '{{ssh_directory}}/authorized_keys'
+  register: authorized_keys
+
 - name: step 31 | create authorized_keys file
   become_user: '{{user}}'
   file: path='{{ssh_directory}}' state=touch owner={{user}} group={{user}} mode=0600
@@ -201,13 +201,14 @@
 
 - name: step 32 | copy config files
   become: yes
+  remote_src: yes
   template: src={{ item.src }} dest={{ item.dest }}
   mode: 0600
-  with_items:
+  with_items:    
    - { src: "./ssh-keys/config", dest: '{{ssh_directory}}' }
 
 - name: step 33 | copying public key in authorized_keys.
-  become_user: '{{user}}'
+  become: yes
   remote_src: yes
   shell: "{{ item }} chdir={{ssh_directory}}"
   with_items:
@@ -216,15 +217,19 @@
 
 - name: step 34 | changing directory permission
   become: yes
-  shell: 'chmod 700 {{ssh_directory}} && chmod 600 {{ssh_directory}}/*'
+  file: dest={{ssh_directory}} owner='{{user}}' group='{{user}}' mode=700 recurse=yes
 
-- name: step 35 | Checking java binary
+- name: step 35 | changing directory permission
+  become: yes
+  file: dest={{ssh_directory}}/* owner='{{user}}' group='{{user}}' mode=600 recurse=yes
+
+- name: step 36 | Checking java binary
   become_user: '{{user}}'
   stat:
    path: "{{home_directory}}/{{java_binary}}"
   register: folder_stats
 
-- name: step 36 | copy java-1.8 binary
+- name: step 37 | copy java-1.8 binary
   become_user: '{{user}}'
   copy:
     src: ./files/{{java_binary}}
@@ -233,13 +238,13 @@
     group: '{{user}}'
   when: not folder_stats.stat.exists
 
-- name: step 37 | check java directory
+- name: step 38 | check java directory
   become_user: '{{user}}'
   stat:
    path: "{{java_home}}"
   register: folder_stats
 
-- name: step 38 | extracting {{java_version}} binary
+- name: step 39 | extracting {{java_version}} binary
   become_user: '{{user}}'
   unarchive:
     src: ./files/{{java_binary}}
@@ -248,13 +253,13 @@
     group: '{{user}}'
   when: not folder_stats.stat.exists
 
-- name: step 39 | Checking home directory
+- name: step 40 | Checking home directory
   become_user: '{{user}}'
   stat:
    path: "{{home_directory}}"
   register: folder_stats
 
-- name: step 40 | copy envrc file
+- name: step 41 | copy envrc file
   template:
     src: ./env-file/envrc
     dest: '{{home_directory}}'
@@ -262,19 +267,19 @@
     group: '{{user}}'
   when: folder_stats.stat.exists
 
-- name: step 41 | renaming envrc file
+- name: step 42 | renaming envrc file
   command: mv /home/{{user}}/envrc /home/{{user}}/.envrc
 
-- name: Step 42 | sync master time on all the machines
+- name: Step 43 | sync master time on all the machines
   command: echo {{user}} | sudo -S date --set="$(ssh {{ groups['master'][0] }} date)"
 
-- name: step 43 | check java is installed or not
+- name: step 44 | check java is installed or not
   shell: java -version
   register: check_java
   ignore_errors: True
   changed_when: False
 
-- name: Step 44 | update alternatives
+- name: Step 45 | update alternatives
   command: "{{ item }}"
   when: check_java.rc > 0
   with_items:
@@ -287,18 +292,18 @@
    - update-alternatives --set javaws "{{home_directory}}/jdk1.8.0_101/bin/javaws"
    - update-alternatives --set jps "{{home_directory}}/jdk1.8.0_101/bin/jps"
 
-- name: step 45 | check node-js is installed or not
+- name: step 46 | check node-js is installed or not
   shell: node -v
   register: check_node
   ignore_errors: True
   changed_when: False
 
-- name : step 46 | installing nodesource via curl
+- name : step 47 | installing nodesource via curl
   become_user: '{{user}}'
   shell: curl --silent --location https://rpm.nodesource.com/setup_6.x | sudo bash -
   when: check_node.rc > 0
 
-- name : step 47 | installing nodejs
+- name : step 48 | installing nodejs
   become: yes
   shell: yum install nodejs -y
   when: check_node.rc > 0

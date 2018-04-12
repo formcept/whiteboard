@@ -1,4 +1,4 @@
-# This file consist of variable where user need to define all values in the variable ex: you want your hostname to be zyz then you should place xyz in user: xyz.
+# This file consist of variable where user need to define all values in the variable ex: you want your hostname to be xyz then you should place xyz in user: xyz in below given variable.
 
 # Install list of below mentioned packages
 install_list: ['epel-release','make','openssl-devel.x86_64','gcc-c++','git','python','gnuplot','make','gcc','tree', 'vim', 'wget', 'nano','ntp', 'curl', 'net-tools','openssl','firewalld','unzip','bzip2','libselinux-python','libsemanage-python']
