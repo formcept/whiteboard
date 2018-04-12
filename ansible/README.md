@@ -22,8 +22,9 @@ This playbook will install.
 
   - You need to put your public and private keys in ansible/roles/common/templates/ssh-keys.
   - Ansible should be installed in ansible node management(ansible node management is the machine from where you want to install the cluster).
-  - you need to download java 1.8 Linux tar and place in ansible/roles/common/file.
-  - you need to edit the configuration according to you in ansible/group_vars files.
+  - You have to create a folder with name files inside ansible/roles/common/
+  - You need to download java 1.8 Linux tar and place in ansible/roles/common/file.
+  - You need to edit the configuration according to you in ansible/group_vars files.
 
 # Ansible Configurations
 - inventory file:- where you have to mention all your machine IP
