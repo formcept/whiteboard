@@ -28,3 +28,5 @@ lib_managed/
 *.lein-repl-history
 onyx.log
 
+# Data
+nbviewer/notebooks/data/harrypotter
