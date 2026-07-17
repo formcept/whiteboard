@@ -120,7 +120,7 @@ sympy==1.13.1
 threadpoolctl==3.6.0
 tinycss2==1.5.1
 tokenizers==0.22.2
-torch==2.6.0
+torch==2.13.0
 tornado==6.5.7
 tqdm==4.68.3
 traitlets==5.15.1
