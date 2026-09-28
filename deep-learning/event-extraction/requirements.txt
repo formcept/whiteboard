@@ -114,7 +114,7 @@ scikit-learn==1.9.0
 scipy==1.17.1
 sentencepiece==0.2.1
 six==1.17.0
-soupsieve==2.8.4
+soupsieve==2.9
 stack-data==0.6.3
 sympy==1.13.1
 threadpoolctl==3.6.0
