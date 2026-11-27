@@ -1,13 +1,13 @@
 {
-  "raw_total": 185,
-  "raw_positives": 125,
-  "raw_negatives": 60,
+  "raw_total": 351,
+  "raw_positives": 280,
+  "raw_negatives": 71,
   "raw_class_distribution": {
-    "ShipmentDelay": 19,
-    "FacilityHalt": 51,
-    "ForceMajeure": 14,
-    "TariffChange": 16,
-    "SupplierInsolvency": 25
+    "ShipmentDelay": 50,
+    "FacilityHalt": 86,
+    "ForceMajeure": 42,
+    "TariffChange": 47,
+    "SupplierInsolvency": 55
   },
   "splits": {
     "train": {

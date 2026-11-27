@@ -1,0 +1,1017 @@
+{
+  "1_zeroshot_unconstrained": {
+    "metrics": {
+      "precision": 0.46958185669003255,
+      "recall": 0.47648774172460057,
+      "f1": 0.46806647467983276,
+      "top_level_f1": 0.5840383669134164,
+      "other_fields_f1": 0.392833710092224,
+      "schema_validity": 0.23333333333333334,
+      "event_type_acc": 0.7333333333333333,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.5973449469531013,
+        "recall": 0.5973449469531013,
+        "f1": 0.5973449469531013,
+        "top_level_f1": 0.5898697496091415,
+        "other_fields_f1": 0.6018300653594771,
+        "schema_validity": 0.6666666666666666,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.15607946914540186,
+        "recall": 0.24980510759474497,
+        "f1": 0.18200633116046971,
+        "top_level_f1": 0.36065636216551605,
+        "other_fields_f1": 0.03703703703703704,
+        "schema_validity": 0.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.373545109576473,
+        "recall": 0.31434889629997,
+        "f1": 0.34004133751040605,
+        "top_level_f1": 0.47560029513772667,
+        "other_fields_f1": 0.2549707602339181,
+        "schema_validity": 0.3333333333333333,
+        "event_type_acc": 0.6666666666666666,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.5711590237850742,
+        "recall": 0.5711590237850742,
+        "f1": 0.5711590237850742,
+        "top_level_f1": 0.6723852627213972,
+        "other_fields_f1": 0.5104232804232804,
+        "schema_validity": 0.16666666666666666,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.6497807339901124,
+        "recall": 0.6497807339901124,
+        "f1": 0.6497807339901124,
+        "top_level_f1": 0.8216801649333002,
+        "other_fields_f1": 0.5599074074074074,
+        "schema_validity": 0.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "SupplierInsolvency": 4,
+        "FacilityHalt": 2
+      },
+      "ShipmentDelay": {
+        "ForceMajeure": 1,
+        "FacilityHalt": 1,
+        "ShipmentDelay": 4
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    },
+    "efficiency": {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "num_docs": 30,
+      "load_in_4bit": false,
+      "model_load_seconds": 3.5133,
+      "total_wall_seconds": 261.976,
+      "throughput_docs_per_min": 6.871,
+      "latency_mean_s": 8.732,
+      "latency_median_s": 8.898,
+      "latency_p95_s": 10.015,
+      "total_tokens_generated": 4965,
+      "effective_tokens_per_second": 18.95,
+      "peak_vram_mb": 4076.39,
+      "peak_rss_mb": 1769.33
+    }
+  },
+  "2_zeroshot_outlines": {
+    "metrics": {
+      "precision": 0.3841000941210832,
+      "recall": 0.38990341153715463,
+      "f1": 0.37543470896278724,
+      "top_level_f1": 0.49236578065375036,
+      "other_fields_f1": 0.2463037693799306,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.36666666666666664,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.1476582654923687,
+        "recall": 0.23068417530975274,
+        "f1": 0.16732336911710632,
+        "top_level_f1": 0.2818244674926739,
+        "other_fields_f1": 0.0,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.21168561076730485,
+        "recall": 0.26919991126993476,
+        "f1": 0.23066004271515606,
+        "top_level_f1": 0.40591090407429226,
+        "other_fields_f1": 0.0,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.15865045107331857,
+        "recall": 0.19897684392542225,
+        "f1": 0.16143601076227124,
+        "top_level_f1": 0.319152753998489,
+        "other_fields_f1": 0.0,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.7401165881942786,
+        "recall": 0.630980298288566,
+        "f1": 0.6792140888305659,
+        "top_level_f1": 0.7689456984344125,
+        "other_fields_f1": 0.6133656596988467,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.6623895550781452,
+        "recall": 0.6196758288920973,
+        "f1": 0.6385400333888368,
+        "top_level_f1": 0.6859950792688844,
+        "other_fields_f1": 0.6181531872008063,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "SupplierInsolvency": 6
+      },
+      "ForceMajeure": {
+        "SupplierInsolvency": 6
+      },
+      "ShipmentDelay": {
+        "SupplierInsolvency": 5,
+        "FacilityHalt": 1
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 5,
+        "NoEvent": 1
+      }
+    },
+    "efficiency": {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "num_docs": 30,
+      "use_triage": false,
+      "use_outlines": true,
+      "use_self_correction": false,
+      "use_fallback_filter": false,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.0,
+      "model_load_seconds": 2.3372,
+      "total_wall_seconds": 620.093,
+      "throughput_docs_per_min": 2.903,
+      "latency_mean_s": 20.67,
+      "latency_median_s": 22.837,
+      "latency_p95_s": 25.44,
+      "triage_mean_ms_per_chunk": 0.0,
+      "pass1_mean_s": 20.669,
+      "pass2_mean_s": 0.0,
+      "triage_pass_rate": 1.0,
+      "correction_trigger_rate": 0.0,
+      "total_tokens_generated": 4221,
+      "effective_tokens_per_second": 6.81,
+      "peak_vram_mb": 3080.63,
+      "peak_rss_mb": 2056.08
+    }
+  },
+  "3_lora_unconstrained": {
+    "metrics": {
+      "precision": 0.7582611904805564,
+      "recall": 0.7554971038221343,
+      "f1": 0.75568875172129,
+      "top_level_f1": 0.9084183289005842,
+      "other_fields_f1": 0.6535763782555181,
+      "schema_validity": 0.6,
+      "event_type_acc": 0.9,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.8495665592836609,
+        "recall": 0.8495665592836609,
+        "f1": 0.8495665592836609,
+        "top_level_f1": 0.8959239301695342,
+        "other_fields_f1": 0.8217521367521368,
+        "schema_validity": 0.6666666666666666,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.917003817003817,
+        "recall": 0.8975678975678975,
+        "f1": 0.9063472287229052,
+        "top_level_f1": 0.9925925925925926,
+        "other_fields_f1": 0.8371157872224568,
+        "schema_validity": 0.8333333333333334,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.5808076754241185,
+        "recall": 0.5734547342476479,
+        "f1": 0.5744041253269186,
+        "top_level_f1": 0.7181372549019608,
+        "other_fields_f1": 0.48974983755685514,
+        "schema_validity": 0.6666666666666666,
+        "event_type_acc": 0.5,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.5303526206303985,
+        "recall": 0.5620845204178537,
+        "f1": 0.5448924286977217,
+        "top_level_f1": 0.9433364988920544,
+        "other_fields_f1": 0.2686868686868687,
+        "schema_validity": 0.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.9135752800607873,
+        "recall": 0.894811807593611,
+        "f1": 0.9032334165752434,
+        "top_level_f1": 0.9921013679467786,
+        "other_fields_f1": 0.8505772610592729,
+        "schema_validity": 0.8333333333333334,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 6
+      },
+      "ShipmentDelay": {
+        "CyberAttack_DatabaseOutage": 1,
+        "ShipmentDelay": 3,
+        "FacilityHalt": 1,
+        "FacilityBottleneck": 1
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    },
+    "efficiency": {
+      "model": "/kaggle/working/whiteboard/deep-learning/event-extraction/models/qwen_lora/merged",
+      "num_docs": 30,
+      "use_triage": false,
+      "use_outlines": false,
+      "use_self_correction": false,
+      "use_fallback_filter": false,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.0,
+      "model_load_seconds": 1.9603,
+      "total_wall_seconds": 239.948,
+      "throughput_docs_per_min": 7.502,
+      "latency_mean_s": 7.998,
+      "latency_median_s": 7.594,
+      "latency_p95_s": 10.77,
+      "triage_mean_ms_per_chunk": 0.0,
+      "pass1_mean_s": 7.998,
+      "pass2_mean_s": 0.0,
+      "triage_pass_rate": 1.0,
+      "correction_trigger_rate": 0.0,
+      "total_tokens_generated": 5309,
+      "effective_tokens_per_second": 22.13,
+      "peak_vram_mb": 3072.99,
+      "peak_rss_mb": 2055.25
+    }
+  },
+  "4_lora_outlines_no_corr": {
+    "metrics": {
+      "precision": 0.8299747717994009,
+      "recall": 0.8259634599025254,
+      "f1": 0.8275226703351779,
+      "top_level_f1": 0.8977569532392085,
+      "other_fields_f1": 0.7858070518517791,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.8666666666666667,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.8912332259503275,
+        "recall": 0.8912332259503275,
+        "f1": 0.8912332259503275,
+        "top_level_f1": 0.8959239301695342,
+        "other_fields_f1": 0.8884188034188035,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.8255296360559519,
+        "recall": 0.8368485315853738,
+        "f1": 0.8309306488024512,
+        "top_level_f1": 0.9037037037037038,
+        "other_fields_f1": 0.7754216323562392,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.5819981516145947,
+        "recall": 0.5853154044416514,
+        "f1": 0.5828630786905944,
+        "top_level_f1": 0.7537192654839714,
+        "other_fields_f1": 0.48974983755685514,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.5,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.8958288111065889,
+        "recall": 0.8591083299416633,
+        "f1": 0.8762984966573342,
+        "top_level_f1": 0.9433364988920544,
+        "other_fields_f1": 0.8382010582010583,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.9552840342695416,
+        "recall": 0.957311807593611,
+        "f1": 0.9562879015751826,
+        "top_level_f1": 0.9921013679467786,
+        "other_fields_f1": 0.9372439277259397,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 5,
+        "FacilityHalt": 1
+      },
+      "ShipmentDelay": {
+        "FacilityHalt": 3,
+        "ShipmentDelay": 3
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    },
+    "efficiency": {
+      "model": "/kaggle/working/whiteboard/deep-learning/event-extraction/models/qwen_lora/merged",
+      "num_docs": 30,
+      "use_triage": false,
+      "use_outlines": true,
+      "use_self_correction": false,
+      "use_fallback_filter": false,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.0,
+      "model_load_seconds": 1.8745,
+      "total_wall_seconds": 668.063,
+      "throughput_docs_per_min": 2.694,
+      "latency_mean_s": 22.268,
+      "latency_median_s": 23.943,
+      "latency_p95_s": 27.304,
+      "triage_mean_ms_per_chunk": 0.0,
+      "pass1_mean_s": 22.268,
+      "pass2_mean_s": 0.0,
+      "triage_pass_rate": 1.0,
+      "correction_trigger_rate": 0.0,
+      "total_tokens_generated": 5324,
+      "effective_tokens_per_second": 7.97,
+      "peak_vram_mb": 3080.63,
+      "peak_rss_mb": 2072.29
+    }
+  },
+  "5_lora_outlines_full_stage2": {
+    "metrics": {
+      "precision": 0.7796837665083955,
+      "recall": 0.740645999585065,
+      "f1": 0.7565764434814285,
+      "top_level_f1": 0.8977569532392085,
+      "other_fields_f1": 0.668092871881533,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.8666666666666667,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.8078998926169941,
+        "recall": 0.8078998926169941,
+        "f1": 0.8078998926169941,
+        "top_level_f1": 0.8959239301695342,
+        "other_fields_f1": 0.75508547008547,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.8416010646273805,
+        "recall": 0.7654199601568022,
+        "f1": 0.8001937887632655,
+        "top_level_f1": 0.9037037037037038,
+        "other_fields_f1": 0.7110952180298248,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.665331484947928,
+        "recall": 0.5853154044416514,
+        "f1": 0.611896478561156,
+        "top_level_f1": 0.7537192654839714,
+        "other_fields_f1": 0.5176018874677285,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.5,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.7738050015827794,
+        "recall": 0.7370845204178537,
+        "f1": 0.7542746871335245,
+        "top_level_f1": 0.9433364988920544,
+        "other_fields_f1": 0.642962962962963,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.809781388766896,
+        "recall": 0.8075102202920238,
+        "f1": 0.8086173703322025,
+        "top_level_f1": 0.9921013679467786,
+        "other_fields_f1": 0.7137188208616781,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 5,
+        "FacilityHalt": 1
+      },
+      "ShipmentDelay": {
+        "FacilityHalt": 3,
+        "ShipmentDelay": 3
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    },
+    "efficiency": {
+      "model": "/kaggle/working/whiteboard/deep-learning/event-extraction/models/qwen_lora/merged",
+      "num_docs": 30,
+      "use_triage": false,
+      "use_outlines": true,
+      "use_self_correction": true,
+      "use_fallback_filter": true,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.0,
+      "model_load_seconds": 1.8514,
+      "total_wall_seconds": 1128.823,
+      "throughput_docs_per_min": 1.595,
+      "latency_mean_s": 37.627,
+      "latency_median_s": 35.96,
+      "latency_p95_s": 53.438,
+      "triage_mean_ms_per_chunk": 0.0,
+      "pass1_mean_s": 22.27,
+      "pass2_mean_s": 17.063,
+      "triage_pass_rate": 1.0,
+      "correction_trigger_rate": 0.6731,
+      "total_tokens_generated": 9055,
+      "effective_tokens_per_second": 8.02,
+      "peak_vram_mb": 3141.57,
+      "peak_rss_mb": 2069.95
+    }
+  },
+  "6_e2e_distilbert_plus_stage2": {
+    "metrics": {
+      "precision": 0.7796837665083955,
+      "recall": 0.740645999585065,
+      "f1": 0.7565764434814285,
+      "top_level_f1": 0.8977569532392085,
+      "other_fields_f1": 0.668092871881533,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.8666666666666667,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.8078998926169941,
+        "recall": 0.8078998926169941,
+        "f1": 0.8078998926169941,
+        "top_level_f1": 0.8959239301695342,
+        "other_fields_f1": 0.75508547008547,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.8416010646273805,
+        "recall": 0.7654199601568022,
+        "f1": 0.8001937887632655,
+        "top_level_f1": 0.9037037037037038,
+        "other_fields_f1": 0.7110952180298248,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.665331484947928,
+        "recall": 0.5853154044416514,
+        "f1": 0.611896478561156,
+        "top_level_f1": 0.7537192654839714,
+        "other_fields_f1": 0.5176018874677285,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.5,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.7738050015827794,
+        "recall": 0.7370845204178537,
+        "f1": 0.7542746871335245,
+        "top_level_f1": 0.9433364988920544,
+        "other_fields_f1": 0.642962962962963,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.809781388766896,
+        "recall": 0.8075102202920238,
+        "f1": 0.8086173703322025,
+        "top_level_f1": 0.9921013679467786,
+        "other_fields_f1": 0.7137188208616781,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 5,
+        "FacilityHalt": 1
+      },
+      "ShipmentDelay": {
+        "FacilityHalt": 3,
+        "ShipmentDelay": 3
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    },
+    "efficiency": {
+      "model": "/kaggle/working/whiteboard/deep-learning/event-extraction/models/qwen_lora/merged",
+      "num_docs": 30,
+      "use_triage": true,
+      "use_outlines": true,
+      "use_self_correction": true,
+      "use_fallback_filter": true,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.2304,
+      "model_load_seconds": 1.5798,
+      "total_wall_seconds": 811.495,
+      "throughput_docs_per_min": 2.218,
+      "latency_mean_s": 27.05,
+      "latency_median_s": 27.95,
+      "latency_p95_s": 40.78,
+      "triage_mean_ms_per_chunk": 8.527,
+      "pass1_mean_s": 15.673,
+      "pass2_mean_s": 14.202,
+      "triage_pass_rate": 0.6538,
+      "correction_trigger_rate": 0.7353,
+      "total_tokens_generated": 7211,
+      "effective_tokens_per_second": 8.89,
+      "peak_vram_mb": 3397.05,
+      "peak_rss_mb": 2155.55
+    }
+  },
+  "7_e2e_disambiguated_prompt": {
+    "metrics": {
+      "precision": 0.8175524172827546,
+      "recall": 0.7949847411497762,
+      "f1": 0.8053385624653218,
+      "top_level_f1": 0.9522559235361168,
+      "other_fields_f1": 0.7154449560397104,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.9666666666666667,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.824674630924631,
+        "recall": 0.824674630924631,
+        "f1": 0.824674630924631,
+        "top_level_f1": 0.9406565656565656,
+        "other_fields_f1": 0.75508547008547,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.8296637426900585,
+        "recall": 0.7339181286549707,
+        "f1": 0.7778466910553853,
+        "top_level_f1": 0.9037037037037038,
+        "other_fields_f1": 0.6677098489237095,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.8717362054594023,
+        "recall": 0.8717362054594023,
+        "f1": 0.8717362054594023,
+        "top_level_f1": 0.9814814814814815,
+        "other_fields_f1": 0.8168635674483627,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.7519061185727852,
+        "recall": 0.7370845204178537,
+        "f1": 0.7438179145549882,
+        "top_level_f1": 0.9433364988920544,
+        "other_fields_f1": 0.6238470728793309,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.809781388766896,
+        "recall": 0.8075102202920238,
+        "f1": 0.8086173703322025,
+        "top_level_f1": 0.9921013679467786,
+        "other_fields_f1": 0.7137188208616781,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 5,
+        "FacilityHalt": 1
+      },
+      "ShipmentDelay": {
+        "ShipmentDelay": 6
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    },
+    "efficiency": {
+      "model": "/kaggle/working/whiteboard/deep-learning/event-extraction/models/qwen_lora/merged",
+      "num_docs": 30,
+      "use_triage": true,
+      "use_outlines": true,
+      "use_self_correction": true,
+      "use_fallback_filter": true,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.2111,
+      "model_load_seconds": 1.5508,
+      "total_wall_seconds": 770.664,
+      "throughput_docs_per_min": 2.336,
+      "latency_mean_s": 25.689,
+      "latency_median_s": 27.777,
+      "latency_p95_s": 37.182,
+      "triage_mean_ms_per_chunk": 8.223,
+      "pass1_mean_s": 15.671,
+      "pass2_mean_s": 14.291,
+      "triage_pass_rate": 0.6538,
+      "correction_trigger_rate": 0.6471,
+      "total_tokens_generated": 6750,
+      "effective_tokens_per_second": 8.76,
+      "peak_vram_mb": 3418.34,
+      "peak_rss_mb": 2155.62
+    }
+  },
+  "mixed_42_triage_on": {
+    "eval": {
+      "overall": {
+        "precision": 0.7950122141726635,
+        "recall": 0.7671280949417132,
+        "f1": 0.7785069834391157,
+        "top_level_f1": 0.8793502046946726,
+        "other_fields_f1": 0.715304432296333,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8571428571428571,
+        "count": 42
+      },
+      "positive_only": {
+        "precision": 0.7796837665083955,
+        "recall": 0.740645999585065,
+        "f1": 0.7565764434814285,
+        "top_level_f1": 0.8977569532392085,
+        "other_fields_f1": 0.668092871881533,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8666666666666667,
+        "count": 30
+      },
+      "per_class": {
+        "FacilityHalt": {
+          "precision": 0.8078998926169941,
+          "recall": 0.8078998926169941,
+          "f1": 0.8078998926169941,
+          "top_level_f1": 0.8959239301695342,
+          "other_fields_f1": 0.75508547008547,
+          "schema_validity": 1.0,
+          "event_type_acc": 1.0,
+          "count": 6
+        },
+        "ForceMajeure": {
+          "precision": 0.8416010646273805,
+          "recall": 0.7654199601568022,
+          "f1": 0.8001937887632655,
+          "top_level_f1": 0.9037037037037038,
+          "other_fields_f1": 0.7110952180298248,
+          "schema_validity": 1.0,
+          "event_type_acc": 0.8333333333333334,
+          "count": 6
+        },
+        "NoEvent": {
+          "precision": 0.8333333333333334,
+          "recall": 0.8333333333333334,
+          "f1": 0.8333333333333334,
+          "top_level_f1": 0.8333333333333334,
+          "other_fields_f1": 0.8333333333333334,
+          "schema_validity": 1.0,
+          "event_type_acc": 0.8333333333333334,
+          "count": 12
+        },
+        "ShipmentDelay": {
+          "precision": 0.665331484947928,
+          "recall": 0.5853154044416514,
+          "f1": 0.611896478561156,
+          "top_level_f1": 0.7537192654839714,
+          "other_fields_f1": 0.5176018874677285,
+          "schema_validity": 1.0,
+          "event_type_acc": 0.5,
+          "count": 6
+        },
+        "SupplierInsolvency": {
+          "precision": 0.7738050015827794,
+          "recall": 0.7370845204178537,
+          "f1": 0.7542746871335245,
+          "top_level_f1": 0.9433364988920544,
+          "other_fields_f1": 0.642962962962963,
+          "schema_validity": 1.0,
+          "event_type_acc": 1.0,
+          "count": 6
+        },
+        "TariffChange": {
+          "precision": 0.809781388766896,
+          "recall": 0.8075102202920238,
+          "f1": 0.8086173703322025,
+          "top_level_f1": 0.9921013679467786,
+          "other_fields_f1": 0.7137188208616781,
+          "schema_validity": 1.0,
+          "event_type_acc": 1.0,
+          "count": 6
+        }
+      },
+      "confusion_matrix": {
+        "FacilityHalt": {
+          "FacilityHalt": 6
+        },
+        "ForceMajeure": {
+          "ForceMajeure": 5,
+          "FacilityHalt": 1
+        },
+        "NoEvent": {
+          "NoEvent": 10,
+          "FacilityHalt": 2
+        },
+        "ShipmentDelay": {
+          "FacilityHalt": 3,
+          "ShipmentDelay": 3
+        },
+        "SupplierInsolvency": {
+          "SupplierInsolvency": 6
+        },
+        "TariffChange": {
+          "TariffChange": 6
+        }
+      }
+    },
+    "efficiency": {
+      "model": "/kaggle/working/whiteboard/deep-learning/event-extraction/models/qwen_lora/merged",
+      "num_docs": 42,
+      "use_triage": true,
+      "use_outlines": true,
+      "use_self_correction": true,
+      "use_fallback_filter": true,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.2094,
+      "model_load_seconds": 1.8006,
+      "total_wall_seconds": 854.801,
+      "throughput_docs_per_min": 2.948,
+      "latency_mean_s": 20.352,
+      "latency_median_s": 26.831,
+      "latency_p95_s": 39.209,
+      "triage_mean_ms_per_chunk": 8.171,
+      "pass1_mean_s": 15.481,
+      "pass2_mean_s": 14.355,
+      "triage_pass_rate": 0.5625,
+      "correction_trigger_rate": 0.7222,
+      "total_tokens_generated": 7470,
+      "effective_tokens_per_second": 8.74,
+      "peak_vram_mb": 3402.17,
+      "peak_rss_mb": 2156.84
+    }
+  },
+  "mixed_42_triage_off": {
+    "eval": {
+      "overall": {
+        "precision": 0.6045360236964731,
+        "recall": 0.5766519044655227,
+        "f1": 0.5880307929629252,
+        "top_level_f1": 0.6888740142184823,
+        "other_fields_f1": 0.5248282418201425,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.6666666666666666,
+        "count": 42
+      },
+      "positive_only": {
+        "precision": 0.7796837665083955,
+        "recall": 0.740645999585065,
+        "f1": 0.7565764434814285,
+        "top_level_f1": 0.8977569532392085,
+        "other_fields_f1": 0.668092871881533,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8666666666666667,
+        "count": 30
+      },
+      "per_class": {
+        "FacilityHalt": {
+          "precision": 0.8078998926169941,
+          "recall": 0.8078998926169941,
+          "f1": 0.8078998926169941,
+          "top_level_f1": 0.8959239301695342,
+          "other_fields_f1": 0.75508547008547,
+          "schema_validity": 1.0,
+          "event_type_acc": 1.0,
+          "count": 6
+        },
+        "ForceMajeure": {
+          "precision": 0.8416010646273805,
+          "recall": 0.7654199601568022,
+          "f1": 0.8001937887632655,
+          "top_level_f1": 0.9037037037037038,
+          "other_fields_f1": 0.7110952180298248,
+          "schema_validity": 1.0,
+          "event_type_acc": 0.8333333333333334,
+          "count": 6
+        },
+        "NoEvent": {
+          "precision": 0.16666666666666666,
+          "recall": 0.16666666666666666,
+          "f1": 0.16666666666666666,
+          "top_level_f1": 0.16666666666666666,
+          "other_fields_f1": 0.16666666666666666,
+          "schema_validity": 1.0,
+          "event_type_acc": 0.16666666666666666,
+          "count": 12
+        },
+        "ShipmentDelay": {
+          "precision": 0.665331484947928,
+          "recall": 0.5853154044416514,
+          "f1": 0.611896478561156,
+          "top_level_f1": 0.7537192654839714,
+          "other_fields_f1": 0.5176018874677285,
+          "schema_validity": 1.0,
+          "event_type_acc": 0.5,
+          "count": 6
+        },
+        "SupplierInsolvency": {
+          "precision": 0.7738050015827794,
+          "recall": 0.7370845204178537,
+          "f1": 0.7542746871335245,
+          "top_level_f1": 0.9433364988920544,
+          "other_fields_f1": 0.642962962962963,
+          "schema_validity": 1.0,
+          "event_type_acc": 1.0,
+          "count": 6
+        },
+        "TariffChange": {
+          "precision": 0.809781388766896,
+          "recall": 0.8075102202920238,
+          "f1": 0.8086173703322025,
+          "top_level_f1": 0.9921013679467786,
+          "other_fields_f1": 0.7137188208616781,
+          "schema_validity": 1.0,
+          "event_type_acc": 1.0,
+          "count": 6
+        }
+      },
+      "confusion_matrix": {
+        "FacilityHalt": {
+          "FacilityHalt": 6
+        },
+        "ForceMajeure": {
+          "ForceMajeure": 5,
+          "FacilityHalt": 1
+        },
+        "NoEvent": {
+          "FacilityHalt": 10,
+          "NoEvent": 2
+        },
+        "ShipmentDelay": {
+          "FacilityHalt": 3,
+          "ShipmentDelay": 3
+        },
+        "SupplierInsolvency": {
+          "SupplierInsolvency": 6
+        },
+        "TariffChange": {
+          "TariffChange": 6
+        }
+      }
+    },
+    "efficiency": {
+      "model": "/kaggle/working/whiteboard/deep-learning/event-extraction/models/qwen_lora/merged",
+      "num_docs": 42,
+      "use_triage": false,
+      "use_outlines": true,
+      "use_self_correction": true,
+      "use_fallback_filter": true,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.0,
+      "model_load_seconds": 1.6181,
+      "total_wall_seconds": 1355.641,
+      "throughput_docs_per_min": 1.859,
+      "latency_mean_s": 32.277,
+      "latency_median_s": 29.911,
+      "latency_p95_s": 53.859,
+      "triage_mean_ms_per_chunk": 0.0,
+      "pass1_mean_s": 19.643,
+      "pass2_mean_s": 16.582,
+      "triage_pass_rate": 1.0,
+      "correction_trigger_rate": 0.625,
+      "total_tokens_generated": 10429,
+      "effective_tokens_per_second": 7.69,
+      "peak_vram_mb": 3143.07,
+      "peak_rss_mb": 2141.82
+    }
+  }
+}

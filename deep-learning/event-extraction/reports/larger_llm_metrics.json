@@ -1,0 +1,338 @@
+{
+  "Qwen2.5-3B-Instruct (Zero-Shot)": {
+    "metrics": {
+      "precision": 0.6643238705548604,
+      "recall": 0.6294072358809235,
+      "f1": 0.6444786260368617,
+      "top_level_f1": 0.6780554700867698,
+      "other_fields_f1": 0.6267502138092893,
+      "schema_validity": 0.6333333333333333,
+      "event_type_acc": 0.9666666666666667,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.7884477901111678,
+        "recall": 0.7163358425833759,
+        "f1": 0.7465330150109509,
+        "top_level_f1": 0.6562606595874151,
+        "other_fields_f1": 0.8199235512227637,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.6167848766174705,
+        "recall": 0.5849192275675715,
+        "f1": 0.5996264502059864,
+        "top_level_f1": 0.6648476060270752,
+        "other_fields_f1": 0.5459157905586477,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.5969031642020958,
+        "recall": 0.5277680033787496,
+        "f1": 0.5601160696249712,
+        "top_level_f1": 0.5333195848657823,
+        "other_fields_f1": 0.5727187774202545,
+        "schema_validity": 0.16666666666666666,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.6395656704458581,
+        "recall": 0.6139429498870528,
+        "f1": 0.6247693814217484,
+        "top_level_f1": 0.6735127693637105,
+        "other_fields_f1": 0.5919668109043555,
+        "schema_validity": 0.16666666666666666,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.6799178513977101,
+        "recall": 0.7040701559878677,
+        "f1": 0.6913482139206519,
+        "top_level_f1": 0.8623367305898659,
+        "other_fields_f1": 0.6032261389404246,
+        "schema_validity": 0.8333333333333334,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "efficiency": {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "num_docs": 30,
+      "load_in_4bit": false,
+      "model_load_seconds": 41.4391,
+      "total_wall_seconds": 449.405,
+      "throughput_docs_per_min": 4.005,
+      "latency_mean_s": 14.98,
+      "latency_median_s": 14.485,
+      "latency_p95_s": 20.629,
+      "total_tokens_generated": 5776,
+      "effective_tokens_per_second": 12.85,
+      "peak_vram_mb": 7374.4,
+      "peak_rss_mb": 1976.2
+    }
+  },
+  "Qwen2.5-3B-Instruct (Zero-Shot + Outlines)": {
+    "metrics": {
+      "precision": 0.4288314512194905,
+      "recall": 0.31379514693858934,
+      "f1": 0.3499176143936653,
+      "top_level_f1": 0.4489369977617687,
+      "other_fields_f1": 0.23173718754363914,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.2,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.3551155818306981,
+        "recall": 0.27955562828382596,
+        "f1": 0.30207365816590753,
+        "top_level_f1": 0.41214834209020257,
+        "other_fields_f1": 0.17634680134680134,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.28523274032264145,
+        "recall": 0.2795816242635456,
+        "f1": 0.27802278296989497,
+        "top_level_f1": 0.4301349010593842,
+        "other_fields_f1": 0.04761904761904762,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.4455100503784714,
+        "recall": 0.21400323198568813,
+        "f1": 0.27922089902782915,
+        "top_level_f1": 0.36423191817928663,
+        "other_fields_f1": 0.19166666666666665,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.8002084554752132,
+        "recall": 0.6495950705863741,
+        "f1": 0.7128718194917342,
+        "top_level_f1": 0.7735233628335054,
+        "other_fields_f1": 0.6689793480116061,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.2580904280904281,
+        "recall": 0.1462401795735129,
+        "f1": 0.1773989123129609,
+        "top_level_f1": 0.26464646464646463,
+        "other_fields_f1": 0.07407407407407407,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      }
+    },
+    "efficiency": {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "num_docs": 30,
+      "use_triage": false,
+      "use_outlines": true,
+      "use_self_correction": false,
+      "use_fallback_filter": false,
+      "load_in_4bit": false,
+      "triage_load_seconds": 0.0,
+      "model_load_seconds": 4.8762,
+      "total_wall_seconds": 635.548,
+      "throughput_docs_per_min": 2.832,
+      "latency_mean_s": 21.185,
+      "latency_median_s": 22.535,
+      "latency_p95_s": 27.173,
+      "triage_mean_ms_per_chunk": 0.0,
+      "pass1_mean_s": 21.184,
+      "pass2_mean_s": 0.0,
+      "triage_pass_rate": 1.0,
+      "correction_trigger_rate": 0.0,
+      "total_tokens_generated": 3185,
+      "effective_tokens_per_second": 5.01,
+      "peak_vram_mb": 6058.95,
+      "peak_rss_mb": 2207.89
+    }
+  },
+  "Qwen2.5-7B-Instruct-4bit (Zero-Shot)": {
+    "metrics": {
+      "precision": 0.6530964128338396,
+      "recall": 0.6545194398382134,
+      "f1": 0.6534195278557572,
+      "top_level_f1": 0.685737684644386,
+      "other_fields_f1": 0.6341729275200946,
+      "schema_validity": 0.9,
+      "event_type_acc": 0.9666666666666667,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.651527032082299,
+        "recall": 0.651527032082299,
+        "f1": 0.651527032082299,
+        "top_level_f1": 0.6634941449748567,
+        "other_fields_f1": 0.6443467643467643,
+        "schema_validity": 0.8333333333333334,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.5840888065037265,
+        "recall": 0.5904663575241348,
+        "f1": 0.587064996979917,
+        "top_level_f1": 0.6119464219025306,
+        "other_fields_f1": 0.5697266796107082,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.6598546605119976,
+        "recall": 0.6598546605119976,
+        "f1": 0.6598546605119976,
+        "top_level_f1": 0.5898767876382724,
+        "other_fields_f1": 0.6948435969488601,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.6829173859297611,
+        "recall": 0.6573591856266628,
+        "f1": 0.6691177117040277,
+        "top_level_f1": 0.7236648990448383,
+        "other_fields_f1": 0.6332746823069403,
+        "schema_validity": 0.6666666666666666,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.6870941791414137,
+        "recall": 0.713389963445973,
+        "f1": 0.6995332380005445,
+        "top_level_f1": 0.8397061696614326,
+        "other_fields_f1": 0.6286729143872001,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "efficiency": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "num_docs": 30,
+      "load_in_4bit": true,
+      "model_load_seconds": 130.5335,
+      "total_wall_seconds": 726.461,
+      "throughput_docs_per_min": 2.478,
+      "latency_mean_s": 24.215,
+      "latency_median_s": 22.766,
+      "latency_p95_s": 32.896,
+      "total_tokens_generated": 6197,
+      "effective_tokens_per_second": 8.53,
+      "peak_vram_mb": 8142.67,
+      "peak_rss_mb": 2149.05
+    }
+  },
+  "Qwen2.5-7B-Instruct-4bit (Zero-Shot + Outlines)": {
+    "metrics": {
+      "precision": 0.5476456382684438,
+      "recall": 0.5087261695074065,
+      "f1": 0.5179717450321617,
+      "top_level_f1": 0.6027718414007041,
+      "other_fields_f1": 0.4587160948957717,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.6666666666666666,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.7149292165537556,
+        "recall": 0.7149292165537556,
+        "f1": 0.7149292165537556,
+        "top_level_f1": 0.7944775654763365,
+        "other_fields_f1": 0.6672002072002071,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.57160831639347,
+        "recall": 0.5895061975432309,
+        "f1": 0.5800913452609499,
+        "top_level_f1": 0.6011849590184964,
+        "other_fields_f1": 0.5641349260010518,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.6666666666666666,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.2568001625567415,
+        "recall": 0.13567421856895542,
+        "f1": 0.15076262150331576,
+        "top_level_f1": 0.24035598904019959,
+        "other_fields_f1": 0.0606060606060606,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.708427492062056,
+        "recall": 0.630672460937958,
+        "f1": 0.6653446700172565,
+        "top_level_f1": 0.7324425798172386,
+        "other_fields_f1": 0.6142054182376763,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.48646300377619583,
+        "recall": 0.47284875393313236,
+        "f1": 0.4787308718255309,
+        "top_level_f1": 0.645398113651249,
+        "other_fields_f1": 0.38743386243386246,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.6666666666666666,
+        "count": 6
+      }
+    },
+    "efficiency": {
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "num_docs": 30,
+      "use_triage": false,
+      "use_outlines": true,
+      "use_self_correction": false,
+      "use_fallback_filter": false,
+      "load_in_4bit": true,
+      "triage_load_seconds": 0.0,
+      "model_load_seconds": 37.5017,
+      "total_wall_seconds": 801.702,
+      "throughput_docs_per_min": 2.245,
+      "latency_mean_s": 26.723,
+      "latency_median_s": 29.66,
+      "latency_p95_s": 32.652,
+      "triage_mean_ms_per_chunk": 0.0,
+      "pass1_mean_s": 26.723,
+      "pass2_mean_s": 0.0,
+      "triage_pass_rate": 1.0,
+      "correction_trigger_rate": 0.0,
+      "total_tokens_generated": 4301,
+      "effective_tokens_per_second": 5.36,
+      "peak_vram_mb": 5869.53,
+      "peak_rss_mb": 2235.37
+    }
+  }
+}

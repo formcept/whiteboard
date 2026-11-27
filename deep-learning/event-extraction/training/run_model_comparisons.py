@@ -1,70 +1,83 @@
-import json
+"""Train, merge, and run T4 batch inference for comparison SLMs (SmolLM2, TinyLlama)."""
+
+import argparse
 import subprocess
-import time
-import shutil
+import sys
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
-REPORTS_DIR = BASE / "reports"
 MODELS_TO_TEST = [
     "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-    "HuggingFaceTB/SmolLM2-1.7B-Instruct"
+    "HuggingFaceTB/SmolLM2-1.7B-Instruct",
 ]
-TRAIN_SCRIPT = BASE / "training" / "train_qwen_lora.py"
-BATCH_INFERENCE = BASE / "inference" / "run_batch_inference.py"
-COMPARE_SCRIPT = BASE / "evaluation" / "compare_extraction.py"
 
-with open(TRAIN_SCRIPT, "r") as f:
-    orig_train_code = f.read()
 
-with open(BATCH_INFERENCE, "r") as f:
-    orig_inference_code = f.read()
-
-def run_model(model_name):
-    print(f"\n{'*'*60}\nEvaluating Model: {model_name}\n{'*'*60}")
+def run_model(model_name: str, skip_intermediate_eval: bool = True, force_retrain: bool = False) -> None:
     safe_name = model_name.split("/")[-1]
-    
-    # 1. Update train_qwen_lora.py
-    # Change BASE_MODEL and OUTPUT_DIR
-    mod_train = orig_train_code.replace('"Qwen/Qwen2.5-1.5B-Instruct"', f'"{model_name}"')
-    mod_train = mod_train.replace('"qwen_lora"', f'"{safe_name}_lora"')
-    with open(TRAIN_SCRIPT, "w") as f:
-        f.write(mod_train)
-        
-    # 2. Update run_batch_inference.py
-    # Change BASE_MODEL, ADAPTER_PATH, and output files
-    mod_inf = orig_inference_code.replace('"Qwen/Qwen2.5-1.5B-Instruct"', f'"{model_name}"')
-    mod_inf = mod_inf.replace('"qwen_lora"', f'"{safe_name}_lora"')
-    mod_inf = mod_inf.replace('"baseline_structured_outputs.jsonl"', f'"{safe_name}_baseline.jsonl"')
-    mod_inf = mod_inf.replace('"structured_outputs.jsonl"', f'"{safe_name}_pipeline.jsonl"')
-    
-    # Skip baseline inference
-    mod_inf = mod_inf.replace('print(">>> Running Baseline Inference...")', 'print(">>> Skipping Baseline Inference..."); import sys; sys.exit(0)')
-    
-    with open(BATCH_INFERENCE, "w") as f:
-        f.write(mod_inf)
-        
-    try:
-        lora_out = BASE / "models" / f"{safe_name}_lora"
-        if not (lora_out / "adapter_config.json").exists():
-            print(f"[{safe_name}] Starting LoRA Training (~45m)...")
-            subprocess.run(["python", str(TRAIN_SCRIPT)], check=True)
-        else:
-            print(f"[{safe_name}] LoRA adapter already exists. Skipping training!")
-            
-        print(f"[{safe_name}] Merging LoRA adapter into base model weights...")
-        subprocess.run(["python", str(BASE / "training" / "merge_adapters.py"), model_name, str(lora_out)], check=True)
-        
-        print(f"[{safe_name}] Running Batch Inference...")
-        subprocess.run(["python", str(BATCH_INFERENCE)], check=True)
-        
-    finally:
-        with open(TRAIN_SCRIPT, "w") as f:
-            f.write(orig_train_code)
-        with open(BATCH_INFERENCE, "w") as f:
-            f.write(orig_inference_code)
+    lora_dir = BASE / "models" / f"{safe_name}_lora"
+    merged_dir = lora_dir / "merged"
+    out_jsonl = BASE / "reports" / f"{safe_name}_pipeline.jsonl"
+    perf_json = BASE / "reports" / f"{safe_name}_perf.json"
 
-for model in MODELS_TO_TEST:
-    run_model(model)
-    
-print("\nAll model comparisons have finished running.")
+    print(f"\n{'*' * 60}\nEvaluating Comparison Model: {model_name}\n{'*' * 60}")
+    if force_retrain or not (lora_dir / "adapter_config.json").exists():
+        cmd = [
+            sys.executable,
+            str(BASE / "training" / "train_qwen_lora.py"),
+            "--base-model",
+            model_name,
+            "--output-dir",
+            str(lora_dir),
+        ]
+        if skip_intermediate_eval:
+            cmd.append("--skip-intermediate-eval")
+        subprocess.run(cmd, check=True)
+    else:
+        print(f"[{safe_name}] LoRA adapter exists at {lora_dir}; skipping retrain.")
+
+    if force_retrain or not (merged_dir / "config.json").exists():
+        subprocess.run(
+            [
+                sys.executable,
+                str(BASE / "training" / "merge_lora.py"),
+                "--base-model",
+                model_name,
+                "--adapter-dir",
+                str(lora_dir),
+                "--output-dir",
+                str(merged_dir),
+            ],
+            check=True,
+        )
+
+    subprocess.run(
+        [
+            sys.executable,
+            str(BASE / "inference" / "run_batch_inference.py"),
+            "--model",
+            "pipeline",
+            "--model-dir",
+            str(merged_dir),
+            "--output-file",
+            str(out_jsonl),
+            "--metrics-out",
+            str(perf_json),
+        ],
+        check=True,
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Train and evaluate comparison SLMs on T4.")
+    parser.add_argument("--force-retrain", action="store_true")
+    parser.add_argument("--full-eval", action="store_true", help="Evaluate after every epoch during training")
+    args = parser.parse_args()
+
+    for model in MODELS_TO_TEST:
+        run_model(model, skip_intermediate_eval=not args.full_eval, force_retrain=args.force_retrain)
+
+    print("\nAll model comparisons finished.")
+
+
+if __name__ == "__main__":
+    main()

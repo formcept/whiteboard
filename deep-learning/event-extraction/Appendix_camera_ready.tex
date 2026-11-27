@@ -1,0 +1,553 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue!60!black,
+    pdftitle={Supplementary Materials: Building Resource-Efficient Structured Event Extraction Systems with Small Language Models (Camera-Ready)},
+    pdfauthor={Jaii Mukundh A, Anuj Kumar, and Suresh Srinivasan}
+}
+
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\Alph{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+\title{\textbf{Supplementary Materials: Building Resource-Efficient Structured Event Extraction Systems with Small Language Models}}
+\author{Jaii Mukundh A, Anuj Kumar, and Suresh Srinivasan\\
+\textit{FORMCEPT Technologies \& Solutions Pvt.\ Ltd., Bengaluru, India}\\
+\texttt{ajaiimukundh@gmail.com, anuj.kumar@formcept.com, suresh.srinivasan@formcept.com}}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{plain}
+
+\begin{center}
+\small\textit{Updated Camera-Ready Supplementary Appendix aligned with uniform NVIDIA T4 GPU benchmarks.}
+\end{center}
+
+\tableofcontents
+\newpage
+
+\section{Supplementary Tables and Schemas}
+
+\subsection{Event Schema}
+The extraction schema (\texttt{schemas/extraction\_schema.json}, Draft-07) uses a JSON Schema \texttt{oneOf} discriminator to switch on \texttt{event\_type}, which has six possible values (five supply-chain disruption classes plus \texttt{NoEvent}). All five disruption branches require top-level fields \texttt{event\_type}, \texttt{source\_timestamp}, \texttt{text\_evidence}, and \texttt{arguments} (with \texttt{additionalProperties: false}; runtime \texttt{event\_id} is attached post-validation).
+
+\begin{table}[htbp]
+\centering
+\caption{Shipment Delay Event Schema (\texttt{ShipmentDelay})}
+\label{tab:schema_shipment_delay}
+\begin{tabular}{@{}p{3.0cm} p{9.5cm}@{}}
+\toprule
+\textbf{Field Category} & \textbf{Associated Fields / Constraints} \\
+\midrule
+Required Fields & \texttt{carrier}, \texttt{reason} \\
+Optional Fields & \texttt{consignment\_description}, \texttt{origin}, \texttt{destination}, \texttt{delay\_duration\_days} (integer or null) \\
+Constraints & None \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Supplier Insolvency Event Schema (\texttt{SupplierInsolvency})}
+\label{tab:schema_supplier_insolvency}
+\begin{tabular}{@{}p{3.0cm} p{9.5cm}@{}}
+\toprule
+\textbf{Field Category} & \textbf{Associated Fields / Constraints} \\
+\midrule
+Required Fields & \texttt{supplier\_name}, \texttt{legal\_action} \\
+Optional Fields & \texttt{filing\_date}, \texttt{jurisdiction}, \texttt{affected\_product\_categories} (string array or null) \\
+Constraints & \texttt{legal\_action}: \texttt{Bankruptcy}, \texttt{Liquidation}, \texttt{Restructuring}, \texttt{Receivership}, \texttt{Insolvency} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Force Majeure Event Schema (\texttt{ForceMajeure})}
+\label{tab:schema_force_majeure}
+\begin{tabular}{@{}p{3.0cm} p{9.5cm}@{}}
+\toprule
+\textbf{Field Category} & \textbf{Associated Fields / Constraints} \\
+\midrule
+Required Fields & \texttt{declaring\_entity}, \texttt{cause} \\
+Optional Fields & \texttt{location\_affected}, \texttt{effective\_date} \\
+Constraints & None \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Facility Halt Event Schema (\texttt{FacilityHalt})}
+\label{tab:schema_facility_halt}
+\begin{tabular}{@{}p{3.0cm} p{9.5cm}@{}}
+\toprule
+\textbf{Field Category} & \textbf{Associated Fields / Constraints} \\
+\midrule
+Required Fields & \texttt{operator}, \texttt{facility\_location}, \texttt{disruption\_type} \\
+Optional Fields & \texttt{start\_date}, \texttt{expected\_restart\_date} \\
+Constraints & \texttt{disruption\_type}: \texttt{Strike}, \texttt{Accident}, \texttt{Utility\_Outage}, \texttt{Maintenance}, \texttt{Natural\_Disaster}, \texttt{Cyberattack}, \texttt{Geopolitical\_Conflict}, \texttt{Regulatory\_Halt}, \texttt{Labor\_Dispute} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Tariff Change Event Schema (\texttt{TariffChange})}
+\label{tab:schema_tariff_change}
+\begin{tabular}{@{}p{3.0cm} p{9.5cm}@{}}
+\toprule
+\textbf{Field Category} & \textbf{Associated Fields / Constraints} \\
+\midrule
+Required Fields & \texttt{originating\_country}, \texttt{target\_country}, \texttt{tariff\_action} \\
+Optional Fields & \texttt{tariff\_percentage\_increase} (number or null), \texttt{affected\_goods} (string array or null), \texttt{effective\_date} \\
+Constraints & \texttt{tariff\_action}: \texttt{Increase}, \texttt{Decrease}, \texttt{Implementation}, \texttt{Exemption}, \texttt{Elimination} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{No Event Schema (\texttt{NoEvent})}
+\label{tab:schema_no_event}
+\begin{tabular}{@{}p{3.0cm} p{9.5cm}@{}}
+\toprule
+\textbf{Field Category} & \textbf{Associated Fields / Constraints} \\
+\midrule
+Required Fields & \texttt{event\_type} (\texttt{="NoEvent"}) \\
+Optional Fields & --- \\
+Constraints & \texttt{additionalProperties: false} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\subsection{Qualitative Examples (Data)}
+
+\subsubsection*{Example A: Extraction (\texttt{FacilityHalt} -- UAW Strike, Test Doc \#1)}
+Tables~\ref{tab:ex_a_gold} and~\ref{tab:ex_a_pred} show the gold annotation from \texttt{qwen\_test.jsonl} and the corresponding T4 pipeline prediction from \texttt{reports/structured\_outputs.jsonl}.
+
+\begin{table}[htbp]
+\centering
+\caption{Gold Target Values (Example A -- UAW Strike)}
+\label{tab:ex_a_gold}
+\begin{tabular}{@{}p{3.8cm} p{8.7cm}@{}}
+\toprule
+\textbf{Field} & \textbf{Gold Target Value} \\
+\midrule
+\texttt{event\_type} & \texttt{FacilityHalt} \\
+\texttt{source\_timestamp} & \texttt{2023-09-15T00:00:00Z} \\
+\texttt{text\_evidence} & ``GM was forced to implement an immediate facility halt at the assembly and stamping plant'' \\
+\texttt{operator} & ``General Motors Company'' \\
+\texttt{facility\_location} & ``Wentzville Assembly plant, Missouri, USA'' \\
+\texttt{disruption\_type} & \texttt{Strike} \\
+\texttt{start\_date} & \texttt{2023-09-15T00:00:00Z} \\
+\texttt{expected\_restart\_date} & \texttt{2023-10-30T00:00:00Z} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Pipeline Prediction (Example A -- UAW Strike)}
+\label{tab:ex_a_pred}
+\begin{tabular}{@{}p{3.8cm} p{8.7cm}@{}}
+\toprule
+\textbf{Field} & \textbf{Pipeline Extracted Value} \\
+\midrule
+\texttt{event\_type} & \texttt{FacilityHalt} \\
+\texttt{source\_timestamp} & \texttt{2023-09-15T00:00:00Z} \\
+\texttt{text\_evidence} & ``GM was forced to implement an immediate facility halt at the assembly and stamping plant'' \\
+\texttt{operator} & ``General Motors'' \textit{(Near-Match)} \\
+\texttt{facility\_location} & ``Wentzville, Missouri, USA'' \textit{(Near-Match)} \\
+\texttt{disruption\_type} & \texttt{Strike} \\
+\texttt{start\_date} & \texttt{2023-09-15T00:00:00Z} \\
+\texttt{expected\_restart\_date} & \texttt{2023-10-30T00:00:00Z} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Example B: Misclassification -- Class Ambiguity (\texttt{ShipmentDelay} to \texttt{FacilityHalt}, Test Doc \#7)}
+Tables~\ref{tab:ex_b_gold} and~\ref{tab:ex_b_pred} illustrate the \texttt{ShipmentDelay}-to-\texttt{FacilityHalt} boundary ambiguity observed in 3/6 \texttt{ShipmentDelay} test cases under the default prompt (\texttt{structured\_outputs.jsonl}). Adding the single prompt disambiguation addendum (\texttt{DISAMBIGUATION\_ADDENDUM} in \texttt{pipeline\_core.py}; configuration \texttt{7\_e2e\_disambiguated\_prompt}) eliminates this confusion (6/6 \texttt{ShipmentDelay} type accuracy, 87.17\% class F1).
+
+\begin{table}[htbp]
+\centering
+\caption{Gold Target Values (Example B -- Shipment Delay)}
+\label{tab:ex_b_gold}
+\begin{tabular}{@{}p{3.8cm} p{8.7cm}@{}}
+\toprule
+\textbf{Field} & \textbf{Gold Target Value} \\
+\midrule
+\texttt{event\_type} & \texttt{ShipmentDelay} \\
+\texttt{source\_timestamp} & \texttt{2023-11-10T00:00:00Z} \\
+\texttt{text\_evidence} & ``manual processing slow-down caused a significant shipment delay of exactly 6 days'' \\
+\texttt{carrier} & ``Ocean Network Express'' \\
+\texttt{consignment\_description} & ``medical devices and specialized pharmaceutical packaging'' \\
+\texttt{origin} / \texttt{destination} & ``Port of Singapore'' / ``Port of Melbourne, Australia'' \\
+\texttt{delay\_duration\_days} & \texttt{6} \\
+\texttt{reason} & ``cyberattack and database outage at DP World Australia'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Default Pipeline Prediction (Example B -- Misclassified as \texttt{FacilityHalt})}
+\label{tab:ex_b_pred}
+\begin{tabular}{@{}p{3.8cm} p{8.7cm}@{}}
+\toprule
+\textbf{Field} & \textbf{Pipeline Extracted Value} \\
+\midrule
+\texttt{event\_type} & \texttt{FacilityHalt} $\times$ \\
+\texttt{source\_timestamp} & \texttt{2023-11-10T00:00:00Z} \\
+\texttt{text\_evidence} & ``Ocean Network Express (ONE) ... experienced a database outage... causing a significant shipment delay of exactly 6 days'' \\
+\texttt{carrier} & --- \textit{(Wrong Schema; emitted \texttt{operator}: ``Ocean Network Express'')} \\
+\texttt{delay\_duration\_days} & --- \textit{(Wrong Schema; emitted \texttt{start\_date}/\texttt{expected\_restart\_date})} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Example C: Schema Failure in Zero-Shot Baseline (Structural Inconsistency)}
+Although unconstrained zero-shot \texttt{Qwen2.5-1.5B-Instruct} identifies the coarse \texttt{event\_type} in 22/30 cases (73.33\% event-type accuracy), it fails Draft-07 JSON Schema validation in 23/30 test cases (\textbf{23.33\% schema validity}, 46.81\% Overall F1, 39.28\% Argument-Level F1). Inspection of \texttt{reports/baseline\_structured\_outputs.jsonl} reveals recurring structural errors including non-enum values (e.g., \texttt{"Physical Facility Halt"}, \texttt{"Fire"}, \texttt{"Chapter 11 bankruptcy protection"}), mismatched schema keys (emitting \texttt{SupplierInsolvency} fields for \texttt{ForceMajeure} events), and unformatted dates (e.g., \texttt{"November 10, 2023"}).
+
+\clearpage
+\subsection{LoRA, Triage, and Runtime Configuration}
+Table~\ref{tab:lora_config} documents the exact training, adapter, and inference configuration verified against the repository codebase and T4 benchmark logs.
+
+\begin{table}[htbp]
+\centering
+\caption{Complete LoRA, Triage, and Inference Configuration}
+\label{tab:lora_config}
+\small
+\begin{tabular}{@{}p{3.4cm} p{6.2cm} p{3.2cm}@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} & \textbf{Source} \\
+\midrule
+Base Extraction Model & \texttt{Qwen/Qwen2.5-1.5B-Instruct} & \texttt{train\_qwen\_lora.py} \\
+Base Triage Model & \texttt{distilbert-base-uncased} & \texttt{train\_distilbert.py} \\
+Qwen Architecture & \texttt{Qwen2ForCausalLM}, 28 layers, \texttt{hidden\_size=1536}, 12 attn heads, 2 KV heads (GQA), \texttt{intermediate\_size=8960} & Model \texttt{config.json} \\
+LoRA Rank ($r$) / Alpha ($\alpha$) & $r=16$, $\alpha=32$ (scaling $\alpha/r = 2.0$) & \texttt{train\_qwen\_lora.py} \\
+LoRA Dropout / Bias & $0.1$ / \texttt{none} & \texttt{train\_qwen\_lora.py} \\
+PEFT / Outlines Versions & \texttt{peft==0.15.2}, \texttt{outlines==1.3.1} & \texttt{requirements.txt} \\
+Target Modules & \texttt{q\_proj}, \texttt{k\_proj}, \texttt{v\_proj}, \texttt{o\_proj}, \texttt{gate\_proj}, \texttt{up\_proj}, \texttt{down\_proj} & \texttt{train\_qwen\_lora.py} \\
+Base Model Parameters & 1,543,714,304 ($\sim$1.54B) & \texttt{calculate\_parameters.py} \\
+Trainable LoRA Parameters & 18,464,768 ($\sim$18.46M; 1.196\% of base) & \texttt{sensitivity\_metrics.json} \\
+Training Dtype & \texttt{float16} (NVIDIA T4, \texttt{sm\_75}); \texttt{bfloat16} ($\text{sm}\ge 80$); \texttt{float32} (CPU) & \texttt{train\_qwen\_lora.py} \\
+Inference Dtype & \texttt{float16} (GPU) / \texttt{float32} (CPU) & \texttt{run\_batch\_inference.py} \\
+Optimizer & AdamW, $\text{lr}=1\times 10^{-4}$ & Training scripts \\
+Epochs & 3 (both DistilBERT and Qwen LoRA) & Training scripts \\
+Batch Size & 1 (Qwen), 8 (DistilBERT) & Training scripts \\
+Max Sequence Length & 1,024 tokens (Qwen), 512 tokens (DistilBERT) & Training scripts \\
+Chunking / Triage Threshold & 260 words/chunk ($\sim$338 tokens); $\tau = 0.5$ & \texttt{pipeline\_core.py} \\
+DistilBERT Dropout & 0.2 (attention, hidden, and classifier) & \texttt{train\_distilbert.py} \\
+Random Seeds & 42 (primary); $\{42, 1337, 2026\}$ (variance study) & \texttt{run\_variance\_tests.py} \\
+Max New Tokens & 512 (inference), 256 (training validation) & \texttt{pipeline\_core.py} \\
+Decoding Strategy & Greedy (\texttt{do\_sample=False}) + Outlines FSM & \texttt{pipeline\_core.py} \\
+Hardware Platform & Single NVIDIA T4 GPU (16\,GB VRAM) & \texttt{run\_t4\_benchmarks.py} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{LoRA Parameter Statistics}
+For \texttt{Qwen2.5-1.5B-Instruct} ($d_{\text{model}}=1536$, $d_{\text{kv}}=2 \times 128 = 256$ under 12-head / 2-KV GQA, $d_{\text{ffn}}=8960$, $L=28$ layers, $r=16$), each LoRA layer applies $A \in \mathbb{R}^{r \times d_{\text{in}}}$ and $B \in \mathbb{R}^{d_{\text{out}} \times r}$, yielding $r(d_{\text{in}} + d_{\text{out}})$ trainable parameters per module. Summing across all 7 target modules yields $659,456$ parameters per layer and $28 \times 659,456 = 18,464,768$ total trainable parameters (Table~\ref{tab:lora_param_stats}), matching \texttt{sensitivity\_metrics.json} exactly.
+
+\begin{table}[htbp]
+\centering
+\caption{LoRA Parameter Statistics per Transformer Layer ($r=16$, 28 Layers)}
+\label{tab:lora_param_stats}
+\begin{tabular}{@{}l c c c r@{}}
+\toprule
+\textbf{Module} & \textbf{In $\to$ Out Dim} & \textbf{LoRA $A$ Size} & \textbf{LoRA $B$ Size} & \textbf{Params / Layer} \\
+\midrule
+\texttt{q\_proj} & $1536 \to 1536$ & $16 \times 1536$ & $1536 \times 16$ & 49,152 \\
+\texttt{k\_proj} & $1536 \to 256$ & $16 \times 1536$ & $256 \times 16$ & 28,672 \\
+\texttt{v\_proj} & $1536 \to 256$ & $16 \times 1536$ & $256 \times 16$ & 28,672 \\
+\texttt{o\_proj} & $1536 \to 1536$ & $16 \times 1536$ & $1536 \times 16$ & 49,152 \\
+\texttt{gate\_proj} & $1536 \to 8960$ & $16 \times 1536$ & $8960 \times 16$ & 167,936 \\
+\texttt{up\_proj} & $1536 \to 8960$ & $16 \times 1536$ & $8960 \times 16$ & 167,936 \\
+\texttt{down\_proj} & $8960 \to 1536$ & $16 \times 8960$ & $1536 \times 16$ & 167,936 \\
+\midrule
+\textbf{Per-Layer Total} & --- & --- & --- & \textbf{659,456} \\
+\textbf{28-Layer Total} & --- & --- & --- & \textbf{18,464,768} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Domain Generalization}
+The proposed pipeline is domain-agnostic and can be adapted to other enterprise information extraction tasks by replacing the event taxonomy, annotation guidelines, and output schema while preserving the overall architecture. The following examples illustrate this adaptation.
+
+\subsubsection{Financial Market Intelligence}
+The triage classifier is fine-tuned to identify market-moving news with high recall, while the SLM extracts structured financial events using the same schema-constrained decoding and validation pipeline. Representative event types include \textit{Trading Halt}, \textit{Regulatory Fine}, \textit{Earnings Miss}, \textit{Merger and Acquisition}, and \textit{Executive Leadership Change}. For example,
+\begin{quote}
+\textit{``Singapore's Samlit Moneychanger Pte.\ Ltd., along with its director and compliance manager, is facing court charges for failures related to complaint handling and obstruction of justice during investigations.''}
+\end{quote}
+is transformed into a structured event similar to:
+\begin{verbatim}
+{
+  "event_type": "RegulatoryFine",
+  "arguments": {
+    "company_name": "Samlit Moneychanger Pte. Ltd.",
+    "regulatory_body": "Singapore Court / MAS",
+    "reason": "Complaint handling failures"
+  }
+}
+\end{verbatim}
+
+\subsubsection{Healthcare Event Intelligence}
+The same architecture can be applied to pharmacovigilance and clinical event monitoring by retraining the triage classifier on medication-related documents and adapting the extraction schema. Representative event types include \textit{Adverse Drug Reaction}, \textit{Medication Error}, \textit{Drug Interaction}, \textit{Allergic Reaction}, and \textit{Treatment Discontinuation}. For example,
+\begin{quote}
+\textit{``Patient (ID: 9482) was administered Lisinopril 20 mg daily for hypertension. Within three days, the patient developed a persistent dry cough requiring discontinuation of the medication.''}
+\end{quote}
+is transformed into:
+\begin{verbatim}
+{
+  "event_type": "AdverseDrugReaction",
+  "arguments": {
+    "patient_id": "9482",
+    "received_medication": "Lisinopril",
+    "adverse_reaction": "Dry cough"
+  }
+}
+\end{verbatim}
+
+Both examples reuse the same engineering methodology presented in the main paper. Only the domain-specific event taxonomy, annotation guidelines, and structured output schema are modified, while the staged inference pipeline, parameter-efficient fine-tuning, schema-constrained decoding, and hallucination validation remain unchanged.
+
+\clearpage
+\section{Supplementary Analysis and Discussion}
+
+\subsection{Training, Reproducibility, and Sensitivity Results}
+Following the uniform NVIDIA T4 GPU re-benchmarking (\texttt{evaluation/run\_t4\_benchmarks.py}), Tables~\ref{tab:rank_sweep}--\ref{tab:dataset_splits} record the complete training, multi-seed variance, Stage-1 triage threshold sensitivity, and dataset split statistics archived in \texttt{reports/*.json}. (Note: intermediate per-epoch validation JSONs from the Kaggle T4 training run are not persisted in \texttt{reports/}; final 3-epoch training summaries across all rank configurations and random seeds are reported below.)
+
+\begin{table}[htbp]
+\centering
+\caption{LoRA Rank Sensitivity ($r \in \{4, 8, 16, 32\}$, $\alpha = 2r$, Seed 42, NVIDIA T4 GPU)}
+\label{tab:rank_sweep}
+\small
+\begin{tabular}{@{}l r c c c c c c c@{}}
+\toprule
+\textbf{Rank} & \textbf{Params} & \textbf{Loss} & \textbf{Train (s)} & \textbf{Train VRAM} & \textbf{F1} & \textbf{Top F1} & \textbf{Arg F1} & \textbf{Type Acc.} \\
+\midrule
+$r=4$ & 4.62M & 0.041 & 585.5 & 9.38\,GB & 79.66\% & 86.91\% & 75.50\% & 86.67\% \\
+$r=8$ & 9.23M & 0.033 & 584.4 & 9.44\,GB & 80.97\% & 88.22\% & 76.08\% & 90.00\% \\
+$r=16$ (Default) & 18.46M & 0.026 & 589.4 & 9.54\,GB & 80.39\% & 85.57\% & 77.08\% & 86.67\% \\
+$r=32$ & 36.93M & 0.019 & 605.7 & 9.77\,GB & \textbf{89.14\%} & \textbf{93.74\%} & \textbf{86.22\%} & \textbf{96.67\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All rank sweeps converged within $\sim$10 minutes on a single T4 GPU under FP16 training (9.38--9.77\,GB peak training VRAM) and required nearly identical merged inference VRAM (3.04--3.06\,GB). Across three random seeds (\texttt{42}, \texttt{1337}, \texttt{2026}), Table~\ref{tab:variance} confirms stable generalization (\textbf{82.61\% $\pm$ 1.60\%} Overall F1, 100\% schema validity).
+
+\begin{table}[htbp]
+\centering
+\caption{Multi-Seed Reproducibility Study ($r=16$, $\alpha=32$, T4 GPU, \texttt{variance\_metrics.json})}
+\label{tab:variance}
+\small
+\begin{tabular}{@{}l c c c c c c c@{}}
+\toprule
+\textbf{Seed} & \textbf{Prec.} & \textbf{Rec.} & \textbf{Overall F1} & \textbf{Top F1} & \textbf{Arg F1} & \textbf{Type Acc.} & \textbf{Valid} \\
+\midrule
+42 & 81.43\% & 79.68\% & 80.39\% & 85.57\% & 77.08\% & 86.67\% & 100\% \\
+1337 & 84.49\% & 83.94\% & 84.12\% & 90.15\% & 80.38\% & 90.00\% & 100\% \\
+2026 & 83.69\% & 83.25\% & 83.30\% & 89.80\% & 79.14\% & 86.67\% & 100\% \\
+\midrule
+\textbf{Mean $\pm$ Std} & --- & --- & \textbf{82.61\% $\pm$ 1.60\%} & \textbf{88.51\% $\pm$ 2.08\%} & \textbf{78.87\% $\pm$ 1.36\%} & --- & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Stage-1 DistilBERT Triage Metrics \& Probability Threshold Sweep (\texttt{distilbert\_test}, $n=30$)}
+\label{tab:triage_sens}
+\small
+\begin{tabular}{@{}l c c c c c c@{}}
+\toprule
+\textbf{Split / Threshold ($\tau$)} & \textbf{Acc.} & \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{TP / FP / TN / FN} & \textbf{Pass Rate} \\
+\midrule
+Train Split ($n=137$, $\tau=0.5$) & 100.00\% & 100.00\% & 100.00\% & 100.00\% & 83 / 0 / 54 / 0 & 60.58\% \\
+Validation Split ($n=29$, $\tau=0.5$) & 96.55\% & 100.00\% & 95.83\% & 97.87\% & 23 / 0 / 5 / 1 & 79.31\% \\ \midrule
+Test Sweep ($\tau \in \{0.1, 0.2, 0.3\}$) & 90.00\% & 85.71\% & 100.00\% & 92.31\% & 18 / 3 / 9 / 0 & 70.00\% \\
+Test Sweep ($\tau \in \{0.5, 0.7, 0.9\}$) & \textbf{93.33\%} & \textbf{90.00\%} & \textbf{100.00\%} & \textbf{94.74\%} & \textbf{18 / 2 / 10 / 0} & \textbf{66.67\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Dataset Provenance and Stratified Split Class Counts (\texttt{dataset\_metrics.json})}
+\label{tab:dataset_splits}
+\small
+\begin{tabular}{@{}l c c c ccccc@{}}
+\toprule
+\textbf{Dataset Split} & \textbf{Total} & \textbf{Pos.} & \textbf{Neg.} & \textbf{Fac.Halt} & \textbf{Supp.Ins.} & \textbf{Ship.Del.} & \textbf{Tariff} & \textbf{ForceMaj.} \\
+\midrule
+Raw Master (\texttt{splittable\_redo}) & 351 & 280 & 71 & 86 & 55 & 50 & 47 & 42 \\
+DistilBERT Train / Val / Test & 137 / 29 / 30 & 83 / 24 / 18 & 54 / 5 / 12 & --- & --- & --- & --- & --- \\
+Qwen Train / Val / Test & 115 / 30 / 30 & 115 / 30 / 30 & 0 / 0 / 0 & 24 / 6 / 6 & 23 / 6 / 6 & 24 / 6 / 6 & 23 / 6 / 6 & 21 / 6 / 6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Qualitative Examples, Component Ablations, and T4 Efficiency Profiling}
+The qualitative samples in Appendix~A.2 align with the quantitative T4 benchmarks:
+\begin{itemize}[leftmargin=1.5em]
+\item \textbf{Example A (Success Case):} Demonstrates exact \texttt{text\_evidence} extraction, ISO-8601 date formatting preserved by field-aware grounding, and concise entity normalization (``General Motors Company'' $\to$ ``General Motors'').
+\item \textbf{Example B (Class Ambiguity \& Resolution):} Under the default prompt, 3/6 \texttt{ShipmentDelay} cases collapse into \texttt{FacilityHalt} (50.00\% class accuracy, 59.03\% class F1). Adding the single prompt disambiguation sentence (\texttt{DISAMBIGUATION\_ADDENDUM}) raises \texttt{ShipmentDelay} accuracy to 100.0\% (6/6, 87.17\% class F1) and Overall Top-Level F1 to \textbf{95.23\%}.
+\item \textbf{Example C (Baseline Comparison):} Unconstrained zero-shot Qwen2.5-1.5B produces invalid JSON or schema violations in 76.67\% of cases (23.33\% validity), whereas FSM-constrained decoding guarantees 100\% Draft-07 schema compliance across all LoRA models.
+\end{itemize}
+
+Table~\ref{tab:t4_ablation_larger} compiles the complete T4 GPU runtime, latency, throughput, and memory profiling across all ablation runs, mixed-stream E2E runs, and larger zero-shot baselines (3B FP16, 7B 4-bit NF4).
+
+\begin{table}[htbp]
+\centering
+\caption{Complete T4 GPU Ablation, E2E Triage, and Larger-LLM Efficiency Profile}
+\label{tab:t4_ablation_larger}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{@{}l c c c c c c c r@{}}
+\toprule
+\textbf{Configuration} & \textbf{F1} & \textbf{Top F1} & \textbf{Arg F1} & \textbf{Valid} & \textbf{Wall (s)} & \textbf{Docs/min} & \textbf{Mean (s)} & \textbf{Peak VRAM} \\
+\midrule
+Qwen2.5-1.5B (Zero-Shot) & 46.81\% & 58.40\% & 39.28\% & 23.33\% & 262.0 & 6.87 & 8.73 & 4,076\,MB \\
+Qwen2.5-1.5B (Zero-Shot + Outlines) & 37.54\% & 49.24\% & 24.63\% & 100\% & 620.1 & 2.90 & 20.67 & 3,081\,MB \\
+Qwen2.5-3B (Zero-Shot, FP16) & 64.45\% & 67.81\% & 62.68\% & 63.33\% & 449.4 & 4.01 & 14.98 & 7,374\,MB \\
+Qwen2.5-3B (Zero-Shot + Outlines) & 34.99\% & 44.89\% & 23.17\% & 100\% & 635.5 & 2.83 & 21.19 & 6,059\,MB \\
+Qwen2.5-7B-4bit (Zero-Shot, NF4) & 65.34\% & 68.57\% & 63.42\% & 90.00\% & 726.5 & 2.48 & 24.22 & 8,143\,MB \\
+Qwen2.5-7B-4bit (Zero-Shot + Outlines) & 51.80\% & 60.28\% & 45.87\% & 100\% & 801.7 & 2.25 & 26.72 & 5,870\,MB \\ \midrule
+LoRA Only (No Outlines) & 75.57\% & 90.84\% & 65.36\% & 60.00\% & 239.9 & 7.50 & 8.00 & 3,073\,MB \\
+LoRA + Outlines (No Self-Corr.) & 82.75\% & 89.78\% & 78.58\% & 100\% & 668.1 & 2.69 & 22.27 & 3,081\,MB \\
+Full Stage 2 (Legacy Self-Corr.) & 75.66\% & 89.78\% & 66.81\% & 100\% & 1128.8 & 1.60 & 37.63 & 3,142\,MB \\
+\textbf{Stage 2 + Field-Aware Self-Corr.} & \textbf{83.71\%} & \textbf{89.78\%} & \textbf{80.04\%} & \textbf{100\%} & \textbf{840.6} & --- & \textbf{28.02} & --- \\
+\quad + \emph{ShipmentDelay} Disambiguation & 80.53\% & \textbf{95.23\%} & 71.54\% & 100\% & 770.7 & 2.34 & 25.69 & 3,418\,MB \\ \midrule
+\textbf{Mixed-42 E2E (Triage ON)} & \textbf{77.85\%} & \textbf{87.94\%} & \textbf{71.53\%} & \textbf{100\%} & \textbf{854.8} & \textbf{2.95} & \textbf{20.35} & \textbf{3,402\,MB} \\
+Mixed-42 E2E (Triage OFF) & 58.80\% & 68.89\% & 52.48\% & 100\% & 1355.6 & 1.86 & 32.28 & 3,143\,MB \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Per-Class Prediction Analysis}
+Table~\ref{tab:pred_delta} presents the updated confusion delta on the 30-document positive test set ($n=6$ per class). Under the default prompt, \texttt{FacilityHalt} is over-predicted by $+4$ (10 vs.\ 6), absorbing 3 \texttt{ShipmentDelay} cases and 1 \texttt{ForceMajeure} case, while \texttt{SupplierInsolvency} and \texttt{TariffChange} achieve 100\% event-type accuracy. With the disambiguated prompt, \texttt{ShipmentDelay} over-absorption vanishes completely ($+1$ overall delta on \texttt{FacilityHalt}). Table~\ref{tab:per_class_all_models} compares per-class F1 and type accuracy across all four evaluated models: notably, both \texttt{SmolLM2-1.7B} and \texttt{TinyLlama-1.1B} completely collapse on \texttt{SupplierInsolvency} (0.0\% type accuracy), whereas \texttt{Qwen2.5-1.5B} maintains strong balance across categories.
+
+\begin{table}[htbp]
+\centering
+\caption{Per-Class Prediction Delta ($n=6$ per class, Default vs.\ Disambiguated Prompt)}
+\label{tab:pred_delta}
+\small
+\begin{tabular}{@{}l c c c | c c l@{}}
+\toprule
+\textbf{Event Type} & \textbf{Gold} & \textbf{Pred (Def.)} & \textbf{Delta} & \textbf{Pred (Disamb.)} & \textbf{Delta} & \textbf{Note} \\
+\midrule
+\texttt{FacilityHalt} & 6 & 10 & +4 & 7 & +1 & Absorbs 3 \texttt{ShipmentDelay} + 1 \texttt{ForceMajeure} (default) \\
+\texttt{SupplierInsolvency} & 6 & 6 & 0 & 6 & 0 & 100\% type accuracy in both \\
+\texttt{ForceMajeure} & 6 & 5 & $-1$ & 5 & $-1$ & 1 case predicted as \texttt{FacilityHalt} \\
+\texttt{TariffChange} & 6 & 6 & 0 & 6 & 0 & 100\% type accuracy in both \\
+\texttt{ShipmentDelay} & 6 & 3 & $-3$ & 6 & 0 & Disambiguation restores 6/6 recall \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Per-Class Extraction Breakdown Across Evaluated Models (\texttt{per\_class\_metrics.json})}
+\label{tab:per_class_all_models}
+\small
+\begin{tabular}{@{}l c c c c@{}}
+\toprule
+\textbf{Event Type (F1 / Type Acc.)} & \textbf{Qwen-1.5B (ZS)} & \textbf{Qwen-1.5B (LoRA)} & \textbf{SmolLM2-1.7B (LoRA)} & \textbf{TinyLlama-1.1B (LoRA)} \\
+\midrule
+\texttt{FacilityHalt} & 59.73\% / 100\% & \textbf{93.29\%} / 100\% & 86.00\% / 100\% & 83.39\% / 100\% \\
+\texttt{ForceMajeure} & 18.20\% / 0.0\% & 82.96\% / 83.3\% & \textbf{87.14\%} / 100\% & 84.46\% / 100\% \\
+\texttt{ShipmentDelay} & 34.00\% / 66.7\% & 59.03\% / 50.0\% & 59.16\% / 50.0\% & \textbf{82.05\%} / 100\% \\
+\texttt{SupplierInsolvency} & 57.12\% / 100\% & \textbf{87.63\%} / 100\% & 32.00\% / 0.0\% & 8.29\% / 0.0\% \\
+\texttt{TariffChange} & 64.98\% / 100\% & \textbf{95.63\%} / 100\% & 89.53\% / 100\% & 89.76\% / 100\% \\
+\midrule
+\textbf{Macro Average} & 46.81\% / 73.3\% & \textbf{83.71\%} / \textbf{86.7\%} & 70.77\% / 70.0\% & 69.59\% / 80.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{LoRA Adapter Weight, Perplexity, and System Footprint Analysis}
+
+\subsubsection{Parameter Statistics}
+The LoRA adapters introduce 18,464,768 ($\sim$18.46M) trainable parameters distributed across all 28 transformer layers (1.196\% of base weights). Detailed per-layer matrix dimensions and counts are provided in Appendix~A.4.
+
+\subsubsection{Domain Adaptation Evidence}
+Table~\ref{tab:lora_norms} reports the mean Frobenius norms $\|\Delta W\|_F = \|(\alpha/r) B A\|_F$ recorded in \texttt{reports/lora\_weight\_metrics.json}. Fine-tuning primarily modifies the feed-forward MLP projections (\texttt{gate\_proj}: 0.8334, \texttt{up\_proj}: 0.7141, \texttt{down\_proj}: 0.3194), while attention projections (\texttt{q\_proj}: 0.2949, \texttt{o\_proj}: 0.2792, \texttt{k\_proj}: 0.1118, \texttt{v\_proj}: 0.1087) exhibit smaller updates. Layer-wise norms increase monotonically with depth, peaking in upper layers 24--26 (0.4784--0.5043) compared to early layers 0--4 (0.3059--0.3173), indicating higher-level semantic specialization for schema mapping.
+
+\begin{table}[htbp]
+\centering
+\caption{Mean Adapter Update Magnitude (Frobenius Norm) by Module (\texttt{lora\_weight\_metrics.json})}
+\label{tab:lora_norms}
+\small
+\begin{tabular}{@{}l c l c@{}}
+\toprule
+\textbf{Module} & \textbf{Mean $\|\Delta W\|_F$} & \textbf{Layer Depth Extremes} & \textbf{Mean Layer Norm} \\
+\midrule
+\texttt{gate\_proj} (MLP) & 0.8334 & Layer 26 (Highest) & 0.5043 \\
+\texttt{up\_proj} (MLP) & 0.7141 & Layer 24 (2nd Highest) & 0.4865 \\
+\texttt{down\_proj} (MLP) & 0.3194 & Layer 25 (3rd Highest) & 0.4784 \\
+\texttt{q\_proj} (Attention Query) & 0.2949 & Layer 23 (4th Highest) & 0.4597 \\
+\texttt{o\_proj} (Attention Output) & 0.2792 & Layer 0 (Early) & 0.3128 \\
+\texttt{k\_proj} (Attention Key) & 0.1118 & Layer 3 (Early) & 0.3124 \\
+\texttt{v\_proj} (Attention Value) & 0.1087 & Layer 4 (Lowest) & 0.3059 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Perplexity measurements (\texttt{perplexity\_metrics.json}) confirm negligible catastrophic forgetting on general prose (Base: \textbf{6.54} $\to$ Merged LoRA: \textbf{6.60}), while supply-chain prose perplexity shifts slightly (26.62 $\to$ 29.63) as the model specializes toward structured JSON completion. In single-sample runtime profiling (\texttt{system\_performance\_metrics.json}), base Qwen2.5-1.5B loads in 3.65\,s, the DistilBERT triage gate loads in 0.16\,s, and peak host RSS remains 1.84\,GB (2.16\,GB during full E2E batch inference with Outlines).
+
+\subsection{Domain Generalization: Broader Applicability}
+The proposed two-stage pipeline is not specific to supply-chain event extraction. Its core architecture---comprising document triage, parameter-efficient fine-tuning, schema-constrained decoding, and selective hallucination validation---can be reused across enterprise information extraction tasks with only domain-specific adaptations:
+\begin{itemize}[leftmargin=1.5em]
+\item Document corpus and training dataset
+\item Event taxonomy
+\item Annotation guidelines
+\item JSON schema
+\item Prompt templates
+\item Domain-specific evaluation criteria
+\end{itemize}
+To illustrate this transferability, Appendix~A.5 presents conceptual adaptations of the proposed methodology to financial market intelligence and healthcare event extraction.
+
+\subsection{Lessons Learned and Future Directions}
+
+\subsubsection{Prompt-Annotation Alignment}
+Prompt instructions, annotation guidelines, and output schemas must remain consistent throughout the pipeline. Misalignment reduces schema consistency and extraction quality. Future work should investigate automated methods for maintaining this alignment.
+
+\subsubsection{Managing Error-Cost Asymmetry}
+False negatives during document triage are substantially more expensive than false positives because discarded documents never reach the extraction stage. Consequently, optimizing the triage classifier for high recall (100.0\% test recall across $\tau \in [0.1, 0.9]$) proved more effective than maximizing precision. Future work may explore deployment-specific probability calibration techniques such as Platt Scaling.
+
+\subsubsection{Hallucination Detection Requires Field Awareness}
+Lexical grounding is effective for free-text fields but insufficient for structured attributes constrained by predefined formats. In our legacy whitespace check, ISO-8601 timestamps (e.g., \texttt{2023-09-15T00:00:00Z}) were falsely flagged as ungrounded, triggering Pass-2 refinement on 67.31\% of chunks and degrading Overall F1 to 75.66\%. Making grounding ISO-date and array-aware with surgical per-field merging lowered Pass-2 triggers to 26.92\% and lifted Overall F1 to \textbf{83.71\%} (Argument-Level F1 \textbf{80.04\%}). Future work should investigate field-aware confidence estimation and semantic grounding beyond lexical matching.
+
+\subsubsection{Event Taxonomy and Class Ambiguity}
+Balanced datasets alone cannot resolve semantically overlapping event classes. The confusion between \texttt{ShipmentDelay} and \texttt{FacilityHalt} (3/6 cases under default prompting) was resolved by introducing an explicit disambiguation boundary rule (raising \texttt{ShipmentDelay} type accuracy from 50.0\% to 100.0\% and Top-Level F1 to 95.23\%). Future work should explore hierarchical taxonomies or adversarial contrast training.
+
+\subsubsection{Document Segmentation}
+Fixed, non-overlapping 260-word chunks simplify inference and fit within DistilBERT's 512-token context window, but may fragment contextual information across paragraph boundaries. Future work should investigate semantic and context-aware chunking strategies.
+
+\subsubsection{Multi-Event Reasoning}
+Large documents frequently describe multiple related events that are currently extracted independently per chunk. Event deduplication, temporal reasoning, and cross-chunk entity resolution are promising directions for improving document-level reasoning.
+
+\subsubsection{Pipeline Engineering Beyond Model Selection}
+The primary lesson from this work is that reliable enterprise information extraction depends on end-to-end pipeline engineering rather than language model selection alone. Dataset preparation, staged inference (cutting non-event false alerts by 80\% and E2E wall-time by 37\%), structured decoding (100\% schema validity), field-aware grounding validation, and FP16 T4 deployment (3.40\,GB VRAM) collectively contributed more to system performance than raw parameter scaling.
+
+\end{document}

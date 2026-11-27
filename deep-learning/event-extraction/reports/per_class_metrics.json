@@ -1,0 +1,333 @@
+{
+  "Baseline (Qwen Instruct)": {
+    "overall": {
+      "precision": 0.46958185669003255,
+      "recall": 0.47648774172460057,
+      "f1": 0.46806647467983276,
+      "top_level_f1": 0.5840383669134164,
+      "other_fields_f1": 0.392833710092224,
+      "schema_validity": 0.23333333333333334,
+      "event_type_acc": 0.7333333333333333,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.5973449469531013,
+        "recall": 0.5973449469531013,
+        "f1": 0.5973449469531013,
+        "top_level_f1": 0.5898697496091415,
+        "other_fields_f1": 0.6018300653594771,
+        "schema_validity": 0.6666666666666666,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.15607946914540186,
+        "recall": 0.24980510759474497,
+        "f1": 0.18200633116046971,
+        "top_level_f1": 0.36065636216551605,
+        "other_fields_f1": 0.03703703703703704,
+        "schema_validity": 0.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.373545109576473,
+        "recall": 0.31434889629997,
+        "f1": 0.34004133751040605,
+        "top_level_f1": 0.47560029513772667,
+        "other_fields_f1": 0.2549707602339181,
+        "schema_validity": 0.3333333333333333,
+        "event_type_acc": 0.6666666666666666,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.5711590237850742,
+        "recall": 0.5711590237850742,
+        "f1": 0.5711590237850742,
+        "top_level_f1": 0.6723852627213972,
+        "other_fields_f1": 0.5104232804232804,
+        "schema_validity": 0.16666666666666666,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.6497807339901124,
+        "recall": 0.6497807339901124,
+        "f1": 0.6497807339901124,
+        "top_level_f1": 0.8216801649333002,
+        "other_fields_f1": 0.5599074074074074,
+        "schema_validity": 0.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "SupplierInsolvency": 4,
+        "FacilityHalt": 2
+      },
+      "ShipmentDelay": {
+        "ForceMajeure": 1,
+        "FacilityHalt": 1,
+        "ShipmentDelay": 4
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    }
+  },
+  "Qwen2.5-1.5B (LoRA)": {
+    "overall": {
+      "precision": 0.8421981794175454,
+      "recall": 0.8340597140514111,
+      "f1": 0.8370830392297502,
+      "top_level_f1": 0.8977569532392085,
+      "other_fields_f1": 0.800431059521964,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.8666666666666667,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.9328998926169941,
+        "recall": 0.9328998926169941,
+        "f1": 0.9328998926169941,
+        "top_level_f1": 0.8959239301695342,
+        "other_fields_f1": 0.9550854700854701,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.8241466741466742,
+        "recall": 0.8356631356631357,
+        "f1": 0.8296439320196085,
+        "top_level_f1": 0.9037037037037038,
+        "other_fields_f1": 0.7729623480690178,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.8333333333333334,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.602831484947928,
+        "recall": 0.5853154044416514,
+        "f1": 0.5902849732796321,
+        "top_level_f1": 0.7537192654839714,
+        "other_fields_f1": 0.4986624935283346,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.5,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.8958288111065889,
+        "recall": 0.8591083299416633,
+        "f1": 0.8762984966573342,
+        "top_level_f1": 0.9433364988920544,
+        "other_fields_f1": 0.8382010582010583,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.9552840342695416,
+        "recall": 0.957311807593611,
+        "f1": 0.9562879015751826,
+        "top_level_f1": 0.9921013679467786,
+        "other_fields_f1": 0.9372439277259397,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 5,
+        "FacilityHalt": 1
+      },
+      "ShipmentDelay": {
+        "FacilityHalt": 3,
+        "ShipmentDelay": 3
+      },
+      "SupplierInsolvency": {
+        "SupplierInsolvency": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    }
+  },
+  "SmolLM2-1.7B (LoRA)": {
+    "overall": {
+      "precision": 0.7274210735775521,
+      "recall": 0.6989935232201773,
+      "f1": 0.7076768867036269,
+      "top_level_f1": 0.7814925151383437,
+      "other_fields_f1": 0.6529072119189571,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.7,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.8600330225330225,
+        "recall": 0.8600330225330225,
+        "f1": 0.8600330225330226,
+        "top_level_f1": 0.7776806526806527,
+        "other_fields_f1": 0.9094444444444445,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.871399176106603,
+        "recall": 0.871399176106603,
+        "f1": 0.871399176106603,
+        "top_level_f1": 0.9236589774224182,
+        "other_fields_f1": 0.8322043251197414,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.6179667914128394,
+        "recall": 0.5799957062926314,
+        "f1": 0.591643839701371,
+        "top_level_f1": 0.7446393762183235,
+        "other_fields_f1": 0.49522289093762845,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.5,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.3924066924066924,
+        "recall": 0.2882400257400258,
+        "f1": 0.3200269366368402,
+        "top_level_f1": 0.49086229086229083,
+        "other_fields_f1": 0.17222222222222225,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.8952996854286036,
+        "recall": 0.8952996854286036,
+        "f1": 0.8952814585402978,
+        "top_level_f1": 0.9706212785080327,
+        "other_fields_f1": 0.8554421768707483,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 6
+      },
+      "ShipmentDelay": {
+        "FacilityHalt": 3,
+        "ShipmentDelay": 3
+      },
+      "SupplierInsolvency": {
+        "FacilityHalt": 6
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    }
+  },
+  "TinyLlama-1.1B (LoRA)": {
+    "overall": {
+      "precision": 0.7225929750311681,
+      "recall": 0.6838802683277208,
+      "f1": 0.6958703407107076,
+      "top_level_f1": 0.6807080678245184,
+      "other_fields_f1": 0.7066026282854359,
+      "schema_validity": 1.0,
+      "event_type_acc": 0.8,
+      "count": 30
+    },
+    "per_class": {
+      "FacilityHalt": {
+        "precision": 0.8704116059379218,
+        "recall": 0.8052940845704004,
+        "f1": 0.8338785534269525,
+        "top_level_f1": 0.7798582995951419,
+        "other_fields_f1": 0.8714351851851853,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ForceMajeure": {
+        "precision": 0.8808750386711406,
+        "recall": 0.813414721210823,
+        "f1": 0.8445502523463543,
+        "top_level_f1": 0.8888888888888888,
+        "other_fields_f1": 0.8044281430713215,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "ShipmentDelay": {
+        "precision": 0.8205019403849813,
+        "recall": 0.8205019403849813,
+        "f1": 0.8205019403849813,
+        "top_level_f1": 0.8483483483483484,
+        "other_fields_f1": 0.8065787364032978,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      },
+      "SupplierInsolvency": {
+        "precision": 0.1411111111111111,
+        "recall": 0.085,
+        "f1": 0.08285714285714287,
+        "top_level_f1": 0.004444444444444445,
+        "other_fields_f1": 0.14393939393939392,
+        "schema_validity": 1.0,
+        "event_type_acc": 0.0,
+        "count": 6
+      },
+      "TariffChange": {
+        "precision": 0.9000651790506863,
+        "recall": 0.895190595472399,
+        "f1": 0.8975638145381075,
+        "top_level_f1": 0.8820003578457684,
+        "other_fields_f1": 0.9066316828279805,
+        "schema_validity": 1.0,
+        "event_type_acc": 1.0,
+        "count": 6
+      }
+    },
+    "confusion_matrix": {
+      "FacilityHalt": {
+        "FacilityHalt": 6
+      },
+      "ForceMajeure": {
+        "ForceMajeure": 6
+      },
+      "ShipmentDelay": {
+        "ShipmentDelay": 6
+      },
+      "SupplierInsolvency": {
+        "FacilityHalt": 5,
+        "NoEvent": 1
+      },
+      "TariffChange": {
+        "TariffChange": 6
+      }
+    }
+  }
+}
