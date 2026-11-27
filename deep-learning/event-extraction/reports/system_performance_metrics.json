@@ -1,24 +1,24 @@
 {
   "loading": {
-    "base_model_loading_seconds": 2.432559013366699,
-    "adapter_loading_seconds": 0.7197234630584717,
-    "triage_loading_seconds": 0.07155346870422363,
-    "base_model_ram_mb": 195.63671875,
-    "adapter_ram_mb": 630.4609375,
-    "peak_total_ram_mb": 1436.6015625
+    "base_model_loading_seconds": 3.645759344100952,
+    "adapter_loading_seconds": 0.6324572563171387,
+    "triage_loading_seconds": 0.1578388214111328,
+    "base_model_ram_mb": 419.7734375,
+    "adapter_ram_mb": 641.6015625,
+    "peak_total_ram_mb": 1837.1796875
   },
   "inference": {
     "baseline": {
-      "latency_seconds": 11.769248008728027,
+      "latency_seconds": 11.66454029083252,
       "tokens_generated": 256,
-      "tokens_per_second": 21.751602125314328
+      "tokens_per_second": 21.946857194294864
     },
     "pipeline_lora": {
-      "first_pass_latency": 14.32497239112854,
-      "correction_pass_latency": 10.727768659591675,
-      "total_latency_seconds": 25.052741050720215,
+      "first_pass_latency": 11.54171872138977,
+      "correction_pass_latency": 8.197027683258057,
+      "total_latency_seconds": 19.738746404647827,
       "tokens_generated": 440,
-      "effective_tokens_per_second": 17.56294846576682
+      "effective_tokens_per_second": 22.291182579679653
     }
   }
 }
