@@ -411,7 +411,7 @@ Qwen Train / Val / Test & 115 / 30 / 30 & 115 / 30 / 30 & 0 / 0 / 0 & 24 / 6 / 6
 The qualitative samples in Appendix~A.2 align with the quantitative T4 benchmarks:
 \begin{itemize}[leftmargin=1.5em]
 \item \textbf{Example A (Success Case):} Demonstrates exact \texttt{text\_evidence} extraction, ISO-8601 date formatting preserved by field-aware grounding, and concise entity normalization (``General Motors Company'' $\to$ ``General Motors'').
-\item \textbf{Example B (Class Ambiguity \& Resolution):} Under the default prompt, 3/6 \texttt{ShipmentDelay} cases collapse into \texttt{FacilityHalt} (50.00\% class accuracy, 59.03\% class F1). Adding the single prompt disambiguation sentence (\texttt{DISAMBIGUATION\_ADDENDUM}) raises \texttt{ShipmentDelay} accuracy to 100.0\% (6/6, 87.17\% class F1) and Overall Top-Level F1 to \textbf{95.23\%}.
+\item \textbf{Example B (Class Ambiguity \& Resolution):} Under the default prompt, 3/6 \texttt{ShipmentDelay} cases collapse into \texttt{FacilityHalt} (50.00\% class accuracy, 59.03\% class F1). Adding the single prompt disambiguation sentence (\texttt{DISAMBIGUATION\_ADDENDUM}) resolves all three test-set misclassifications (6/6 on the held-out split, 87.17\% class F1) and raises Overall Top-Level F1 to \textbf{95.23\%}.
 \item \textbf{Example C (Baseline Comparison):} Unconstrained zero-shot Qwen2.5-1.5B produces invalid JSON or schema violations in 76.67\% of cases (23.33\% validity), whereas FSM-constrained decoding guarantees 100\% Draft-07 schema compliance across all LoRA models.
 \end{itemize}
 
@@ -435,7 +435,7 @@ Qwen2.5-7B-4bit (Zero-Shot, NF4) & 65.34\% & 68.57\% & 63.42\% & 90.00\% & 726.5
 Qwen2.5-7B-4bit (Zero-Shot + Outlines) & 51.80\% & 60.28\% & 45.87\% & 100\% & 801.7 & 2.25 & 26.72 & 5,870\,MB \\ \midrule
 LoRA Only (No Outlines) & 75.57\% & 90.84\% & 65.36\% & 60.00\% & 239.9 & 7.50 & 8.00 & 3,073\,MB \\
 LoRA + Outlines (No Self-Corr.) & 82.75\% & 89.78\% & 78.58\% & 100\% & 668.1 & 2.69 & 22.27 & 3,081\,MB \\
-Full Stage 2 (Legacy Self-Corr.) & 75.66\% & 89.78\% & 66.81\% & 100\% & 1128.8 & 1.60 & 37.63 & 3,142\,MB \\
+Full Stage 2 (Legacy Self-Corr.) & 75.66\% & 89.78\% & 66.81\% & 100\% & 1128.8 & 1.59 & 37.63 & 3,142\,MB \\
 \textbf{Stage 2 + Field-Aware Self-Corr.} & \textbf{83.71\%} & \textbf{89.78\%} & \textbf{80.04\%} & \textbf{100\%} & \textbf{840.6} & --- & \textbf{28.02} & --- \\
 \quad + \emph{ShipmentDelay} Disambiguation & 80.53\% & \textbf{95.23\%} & 71.54\% & 100\% & 770.7 & 2.34 & 25.69 & 3,418\,MB \\ \midrule
 \textbf{Mixed-42 E2E (Triage ON)} & \textbf{77.85\%} & \textbf{87.94\%} & \textbf{71.53\%} & \textbf{100\%} & \textbf{854.8} & \textbf{2.95} & \textbf{20.35} & \textbf{3,402\,MB} \\
@@ -513,7 +513,7 @@ Table~\ref{tab:lora_norms} reports the mean Frobenius norms $\|\Delta W\|_F = \|
 \end{tabular}
 \end{table}
 
-Perplexity measurements (\texttt{perplexity\_metrics.json}) confirm negligible catastrophic forgetting on general prose (Base: \textbf{6.54} $\to$ Merged LoRA: \textbf{6.60}), while supply-chain prose perplexity shifts slightly (26.62 $\to$ 29.63) as the model specializes toward structured JSON completion. In single-sample runtime profiling (\texttt{system\_performance\_metrics.json}), base Qwen2.5-1.5B loads in 3.65\,s, the DistilBERT triage gate loads in 0.16\,s, and peak host RSS remains 1.84\,GB (2.16\,GB during full E2E batch inference with Outlines).
+Perplexity measurements (\texttt{perplexity\_metrics.json}) confirm negligible catastrophic forgetting on general prose (Base: \textbf{6.54} $\to$ Merged LoRA: \textbf{6.60}), while supply-chain prose perplexity shifts slightly (26.62 $\to$ 29.63) as the model specializes toward structured JSON completion. In single-sample runtime profiling (\texttt{system\_performance\_metrics.json}), under T4 GPU execution base Qwen2.5-1.5B loads in 3.65\,s, the DistilBERT triage gate loads in 0.16\,s, and peak host RSS remains 1.84\,GB (2.16\,GB and 3.40\,GB VRAM during full E2E batch inference with Outlines, $\sim$\$0.00137/doc at 20\% density on AWS \texttt{g4dn.xlarge}). For \texttt{bfloat16} CPU-only inference deployments without GPU accelerators (after offline T4 LoRA training; 16-thread Core Ultra 9 CPU profiling on base 1.5B weights), execution maintains a 4.01\,GiB peak footprint (3.94--4.05\,GB active RSS, 76.95\,ms/chunk triage, 57.38\,s/doc unconstrained, 74.25\,s/doc Outlines E2E), trading higher CPU latency for zero-GPU portability versus T4's $\sim$2.7--2.9$\times$ constrained speedup and $\sim$17$\times$ savings over 70B hosting.
 
 \subsection{Domain Generalization: Broader Applicability}
 The proposed two-stage pipeline is not specific to supply-chain event extraction. Its core architecture---comprising document triage, parameter-efficient fine-tuning, schema-constrained decoding, and selective hallucination validation---can be reused across enterprise information extraction tasks with only domain-specific adaptations:
@@ -539,7 +539,7 @@ False negatives during document triage are substantially more expensive than fal
 Lexical grounding is effective for free-text fields but insufficient for structured attributes constrained by predefined formats. In our legacy whitespace check, ISO-8601 timestamps (e.g., \texttt{2023-09-15T00:00:00Z}) were falsely flagged as ungrounded, triggering Pass-2 refinement on 67.31\% of chunks and degrading Overall F1 to 75.66\%. Making grounding ISO-date and array-aware with surgical per-field merging lowered Pass-2 triggers to 26.92\% and lifted Overall F1 to \textbf{83.71\%} (Argument-Level F1 \textbf{80.04\%}). Future work should investigate field-aware confidence estimation and semantic grounding beyond lexical matching.
 
 \subsubsection{Event Taxonomy and Class Ambiguity}
-Balanced datasets alone cannot resolve semantically overlapping event classes. The confusion between \texttt{ShipmentDelay} and \texttt{FacilityHalt} (3/6 cases under default prompting) was resolved by introducing an explicit disambiguation boundary rule (raising \texttt{ShipmentDelay} type accuracy from 50.0\% to 100.0\% and Top-Level F1 to 95.23\%). Future work should explore hierarchical taxonomies or adversarial contrast training.
+Balanced datasets alone cannot resolve semantically overlapping event classes. The confusion between \texttt{ShipmentDelay} and \texttt{FacilityHalt} (3/6 cases under default prompting) was resolved on the held-out test set by introducing an explicit disambiguation boundary rule (eliminating all three misclassifications and lifting Top-Level F1 to 95.23\%). Future work should explore hierarchical taxonomies or adversarial contrast training.
 
 \subsubsection{Document Segmentation}
 Fixed, non-overlapping 260-word chunks simplify inference and fit within DistilBERT's 512-token context window, but may fragment contextual information across paragraph boundaries. Future work should investigate semantic and context-aware chunking strategies.
@@ -548,6 +548,6 @@ Fixed, non-overlapping 260-word chunks simplify inference and fit within DistilB
 Large documents frequently describe multiple related events that are currently extracted independently per chunk. Event deduplication, temporal reasoning, and cross-chunk entity resolution are promising directions for improving document-level reasoning.
 
 \subsubsection{Pipeline Engineering Beyond Model Selection}
-The primary lesson from this work is that reliable enterprise information extraction depends on end-to-end pipeline engineering rather than language model selection alone. Dataset preparation, staged inference (cutting non-event false alerts by 80\% and E2E wall-time by 37\%), structured decoding (100\% schema validity), field-aware grounding validation, and FP16 T4 deployment (3.40\,GB VRAM) collectively contributed more to system performance than raw parameter scaling.
+The primary lesson from this work is that reliable enterprise information extraction depends on end-to-end pipeline engineering rather than language model selection alone. Dataset preparation, staged inference (cutting non-event false alerts from 10/12 to 2/12, an 80\% reduction, and E2E wall-time by 36.9\%), structured decoding (100\% schema validity), field-aware grounding validation, and flexible inference deployment across CPU-only hosts ($\sim$4.01\,GiB peak RSS in \texttt{bfloat16}) and FP16 T4 GPUs (3.40\,GB VRAM) collectively contributed more to system performance than raw parameter scaling.
 
 \end{document}
